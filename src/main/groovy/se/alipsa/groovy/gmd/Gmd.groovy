@@ -1,5 +1,6 @@
 package se.alipsa.groovy.gmd
 
+import com.openhtmltopdf.util.XRLog
 import com.vladsch.flexmark.ext.attributes.AttributesExtension
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension
 import com.vladsch.flexmark.ext.tables.TablesExtension
@@ -13,7 +14,6 @@ import com.vladsch.flexmark.util.ast.Node
 import com.vladsch.flexmark.util.data.DataHolder
 import com.vladsch.flexmark.util.data.MutableDataSet
 import groovy.text.SimpleTemplateEngine
-import groovy.text.StreamingTemplateEngine
 
 import java.nio.file.Files
 
@@ -28,6 +28,7 @@ class Gmd {
     final DataHolder pdfOptions
 
     Gmd() {
+
         engine = new SimpleTemplateEngine()
         MutableDataSet options = new MutableDataSet()
 

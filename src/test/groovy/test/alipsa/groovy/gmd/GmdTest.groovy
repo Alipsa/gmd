@@ -71,7 +71,33 @@ class GmdTest {
         def gmd = new Gmd()
         def pdfFile = File.createTempFile("weather", ".pdf")
         gmd.gmdToPdf(text, pdfFile)
-        println "created ${pdfFile}, removing it"
+        Assertions.assertTrue(pdfFile.exists())
+        pdfFile.delete()
+    }
+
+    @Test
+    void gmdToMdWithParameter() {
+        def text = '## Hello ${name}!'
+        def gmd = new Gmd()
+        def md = gmd.gmdToMd(text, [name: "Per"])
+        Assertions.assertEquals("## Hello Per!", md)
+    }
+
+    @Test
+    void gmdToHtmlWithParameter() {
+        def text = '## Hello ${name}!'
+        def gmd = new Gmd()
+        def html = gmd.gmdToHtml(text, [name: "Per"])
+        Assertions.assertEquals("<h2>Hello Per!</h2>\n", html)
+    }
+
+    @Test
+    void gmdToPdfWithParameter() {
+        def text = '## Hello ${name}!'
+        def gmd = new Gmd()
+        def pdfFile = File.createTempFile("weather", ".pdf")
+        gmd.gmdToPdf(text, [name: "Per"], pdfFile)
+        Assertions.assertTrue(pdfFile.exists())
         pdfFile.delete()
     }
 }
