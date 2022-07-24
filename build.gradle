@@ -14,11 +14,8 @@ repositories {
 }
 
 dependencies {
-    def groovyVersion = "4.0.3"
     def junitVersion = "5.8.2"
-    implementation "org.apache.groovy:groovy:${groovyVersion}"
-    implementation "org.apache.groovy:groovy-templates:${groovyVersion}"
-    implementation "org.apache.groovy:groovy-dateutil:${groovyVersion}"
+    implementation "org.apache.groovy:groovy-all::4.0.4"
     implementation 'com.vladsch.flexmark:flexmark-all:0.64.0'
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
@@ -34,23 +31,14 @@ task javadocJar(type: Jar, dependsOn: groovydoc) {
     from groovydoc.destinationDir
 }
 
-
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
 
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
-
 nexusPublishing {
     repositories {
-        sonatype {
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-        }
+        sonatype()
     }
 }
 
@@ -58,7 +46,8 @@ publishing {
     publications {
         maven(MavenPublication) {
             from components.java
-
+            artifact(javadocJar)
+            artifact(sourcesJar)
             pom {
                 name = 'Groovy Markdown'
                 description = 'Processing markdown text with groovy enhancements embedded and creating, markdown, html of pdf'

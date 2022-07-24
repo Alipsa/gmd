@@ -12,6 +12,7 @@ import com.vladsch.flexmark.profile.pegdown.PegdownOptionsAdapter
 import com.vladsch.flexmark.util.ast.Node
 import com.vladsch.flexmark.util.data.DataHolder
 import com.vladsch.flexmark.util.data.MutableDataSet
+import groovy.text.SimpleTemplateEngine
 import groovy.text.StreamingTemplateEngine
 
 import java.nio.file.Files
@@ -21,13 +22,13 @@ import java.nio.file.Files
  */
 class Gmd {
 
-    final StreamingTemplateEngine engine
+    final SimpleTemplateEngine engine
     final Parser parser
     final HtmlRenderer renderer
     final DataHolder pdfOptions
 
     Gmd() {
-        engine = new StreamingTemplateEngine()
+        engine = new SimpleTemplateEngine()
         MutableDataSet options = new MutableDataSet()
 
         // add extensions

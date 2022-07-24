@@ -8,10 +8,14 @@ class GmdTest {
 
     def text = """\
         <% 
-        def now = java.time.LocalDate.parse("2022-07-23")
+        import java.time.LocalDate
+        import java.time.format.TextStyle
+        import java.util.Locale
         
-        def dayName = { theDate ->
-                return theDate.getDayOfWeek().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.getDefault())
+        def now = LocalDate.parse("2022-07-23")
+        
+        def dayName(theDate) {
+          return theDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault())
         }
         %>
         # Hello
