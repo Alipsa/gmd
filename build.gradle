@@ -1,0 +1,86 @@
+plugins {
+    id 'groovy'
+    id 'java-library'
+    id 'signing'
+    id 'maven-publish'
+    id('io.github.gradle-nexus.publish-plugin') version '1.1.0'
+}
+
+group 'se.alipsa.groovy'
+version '1.0.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    def groovyVersion = "4.0.3"
+    def junitVersion = "5.8.2"
+    implementation "org.apache.groovy:groovy:${groovyVersion}"
+    implementation "org.apache.groovy:groovy-templates:${groovyVersion}"
+    implementation "org.apache.groovy:groovy-dateutil:${groovyVersion}"
+    implementation 'com.vladsch.flexmark:flexmark-all:0.64.0'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+//Maven Central uploads
+task javadocJar(type: Jar, dependsOn: groovydoc) {
+    classifier = 'javadoc'
+    from groovydoc.destinationDir
+}
+
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+
+            pom {
+                name = 'Groovy Markdown'
+                description = 'Processing markdown text with groovy enhancements embedded and creating, markdown, html of pdf'
+                url = "https://github.com/perNyfelt/gmd"
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://github.com/perNyfelt/gmd/blob/main/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'perNyfelt'
+                        name = 'Per Nyfelt'
+                    }
+                }
+                scm {
+                    url = 'https://github.com/perNyfelt/gmd'
+                    connection = 'scm:git:https://github.com/perNyfelt/gmd.git'
+                    developerConnection = 'scm:git:git@github.com:perNyfelt/gmd.git'
+                }
+            }
+        }
+    }
+}
