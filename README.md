@@ -65,3 +65,24 @@ def html = gmd.gmdToHtml(text, [name: "Per"])
 
 // Or pdf
 gmd.gmdToPdf(text, [name: "Per"], new File("pdfFile.pdf"))
+```
+
+The package is available from maven central:
+Gradle: `se.alipsa.groovy:gmd:1.0.1`
+Maven:
+```xml
+<dependency>
+    <groupId>se.alipsa.groovy</groupId>
+    <artifactId>gmd</artifactId>
+    <version>1.0.1</version>
+</dependency>
+```
+
+Release history
+
+v1.0.1, 2022-07-25
+- upgrade to groovy 4.0.4
+- Fix deploy script so publish to maven central works
+
+v1.0.0, 2022-07-24
+- initial version
