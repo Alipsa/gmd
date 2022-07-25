@@ -6,7 +6,8 @@ Markdown package](https://github.com/vsch/flexmark-java).
 
 A gmd file (or text) is markdown with groovy code enclosed between <% %> bracket (or <%= %> for direct value output). 
 Here is a simple example:
-```
+
+```jsp
 <% 
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -31,8 +32,9 @@ The weather in next couple of days will be:
   }
 %>
 ```
+
 Which will generate the following markdown:
-```
+```markdown
 # Hello
 Today (Saturday) is 2022-07-23.
 
@@ -68,7 +70,12 @@ gmd.gmdToPdf(text, [name: "Per"], new File("pdfFile.pdf"))
 ```
 
 The package is available from maven central:
-Gradle: `se.alipsa.groovy:gmd:1.0.1`
+
+Gradle: 
+```groovy
+implementation "se.alipsa.groovy:gmd:1.0.1"
+```
+
 Maven:
 ```xml
 <dependency>
@@ -80,9 +87,9 @@ Maven:
 
 Release history
 
-v1.0.1, 2022-07-25
+### v1.0.1, 2022-07-25
 - upgrade to groovy 4.0.4
 - Fix deploy script so publish to maven central works
 
-v1.0.0, 2022-07-24
+### v1.0.0, 2022-07-24
 - initial version
