@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'se.alipsa.groovy'
-version '1.0.0'
+version '1.0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -20,8 +20,8 @@ tasks.withType(JavaCompile) {
 
 dependencies {
     def junitVersion = "5.8.2"
-    implementation "org.apache.groovy:groovy-all:4.0.4"
-    implementation 'com.vladsch.flexmark:flexmark-all:0.64.0'
+    implementation "org.apache.groovy:groovy-all:[4.0.4, )"
+    implementation 'com.vladsch.flexmark:flexmark-all:[0.64.0,)'
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
