@@ -125,4 +125,14 @@ class Gmd {
         mdToPdf(md, target)
     }
 
+    void htmlToPdf(String html, OutputStream target) {
+        PdfConverterExtension.exportToPdf(target, html, "", pdfOptions)
+    }
+
+    void htmlToPdf(String html, File file) {
+        try (OutputStream out = Files.newOutputStream(file.toPath())) {
+            htmlToPdf(html, out)
+        }
+    }
+
 }
