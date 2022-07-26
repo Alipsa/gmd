@@ -1,5 +1,6 @@
 package se.alipsa.groovy.gmd
 
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import com.openhtmltopdf.util.XRLog
 import com.vladsch.flexmark.ext.attributes.AttributesExtension
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension
@@ -14,6 +15,7 @@ import com.vladsch.flexmark.util.ast.Node
 import com.vladsch.flexmark.util.data.DataHolder
 import com.vladsch.flexmark.util.data.MutableDataSet
 import groovy.text.SimpleTemplateEngine
+import org.w3c.dom.Document
 
 import java.nio.file.Files
 
@@ -133,6 +135,13 @@ class Gmd {
         try (OutputStream out = Files.newOutputStream(file.toPath())) {
             htmlToPdf(html, out)
         }
+    }
+
+    void htmlToPdf(Document doc, OutputStream os){
+        PdfRendererBuilder builder = new PdfRendererBuilder()
+                .withW3cDocument(doc, new File(".").toURI().toString())
+                .toStream(os);
+        builder.run();
     }
 
 }

@@ -73,13 +73,15 @@ For "Special" characters e.g. match symbol, you should use the html escape codes
 to write `X = ∑(√2π + ∛3)`, you need to do `X = &sum;(&radic;2&pi; + &#8731;3)` and scope the 
 expression with parenthesis as appropriate. Otherwise, it will show up as `X = ?(?2? + ?3)` when you turn it into html or pdf.
 See [HTML Math Symbols](https://www.toptal.com/designers/htmlarrows/math/) for an extensive list.
+Please note that there is a problem with special characters when rendering pdf's. So until that is fixed, stick with 
+rendering the gmd as html and then product the pdf by using some external tool instead.
 
 
 The package is available from maven central:
 
 Gradle: 
 ```groovy
-implementation "se.alipsa.groovy:gmd:1.0.1"
+implementation "se.alipsa.groovy:gmd:1.0.2"
 ```
 
 Maven:
@@ -87,11 +89,14 @@ Maven:
 <dependency>
     <groupId>se.alipsa.groovy</groupId>
     <artifactId>gmd</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 
 Release history
+
+### v1.0.2, 2022-07-26
+- add htmlToPdf methods
 
 ### v1.0.1, 2022-07-25
 - upgrade to groovy 4.0.4
