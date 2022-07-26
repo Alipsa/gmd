@@ -69,6 +69,12 @@ def html = gmd.gmdToHtml(text, [name: "Per"])
 gmd.gmdToPdf(text, [name: "Per"], new File("pdfFile.pdf"))
 ```
 
+For "Special" characters e.g. match symbol, you should use the html escape codes. E.g.
+to write `X = ∑(√2π + ∛3)`, you need to do `X = &sum;(&radic;2&pi; + &#8731;3)` and scope the 
+expression with parenthesis as appropriate. Otherwise, it will show up as `X = ?(?2? + ?3)` when you turn it into html or pdf.
+See [HTML Math Symbols](https://www.toptal.com/designers/htmlarrows/math/) for an extensive list.
+
+
 The package is available from maven central:
 
 Gradle: 
