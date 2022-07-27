@@ -1,6 +1,8 @@
 package se.alipsa.groovy.gmd
 
+import com.openhtmltopdf.mathmlsupport.MathMLDrawer
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
+import com.openhtmltopdf.svgsupport.BatikSVGDrawer
 import com.openhtmltopdf.util.XRLog
 import com.vladsch.flexmark.ext.attributes.AttributesExtension
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension
@@ -24,13 +26,14 @@ import java.nio.file.Files
  */
 class Gmd {
 
+    static final XHTML_MATHML_DOCTYPE = "<!DOCTYPE html PUBLIC\n \"-//OPENHTMLTOPDF//MATH XHTML Character Entities With MathML 1.0//EN\" \"\">\n"
     final SimpleTemplateEngine engine
     final Parser parser
     final HtmlRenderer renderer
     final DataHolder pdfOptions
 
     Gmd() {
-
+        XRLog.setLoggerImpl(new Log4jXRLogger());
         engine = new SimpleTemplateEngine()
         MutableDataSet options = new MutableDataSet()
 
@@ -140,6 +143,8 @@ class Gmd {
     void htmlToPdf(Document doc, OutputStream os){
         PdfRendererBuilder builder = new PdfRendererBuilder()
                 .withW3cDocument(doc, new File(".").toURI().toString())
+                .useSVGDrawer(new BatikSVGDrawer())
+                .useMathMLDrawer(new MathMLDrawer())
                 .toStream(os);
         builder.run();
     }

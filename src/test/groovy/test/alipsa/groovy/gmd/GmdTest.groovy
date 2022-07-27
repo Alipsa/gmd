@@ -100,4 +100,42 @@ class GmdTest {
         Assertions.assertTrue(pdfFile.exists())
         pdfFile.delete()
     }
+
+    @Test
+    void testHtmlWithSpecialCharacters() {
+        String text = """\
+        # Some equations
+        X = &sum;(&radic;2&pi; + &#8731;3)
+        """.stripIndent()
+
+        def gmd = new Gmd()
+        String html = gmd.gmdToHtml(text)
+
+        Assertions.assertEquals("<h1>Some equations</h1>\n" +
+                "<p>X = ∑(√2π + ∛3)</p>\n", html)
+    }
+
+    @Test
+    void testPdfWithSpecialCharacters() {
+        String text = """\
+        # Some equations
+        X = &sum;(&radic;2&pi; + &#8731;3)
+        """.stripIndent()
+
+        def gmd = new Gmd()
+        String snip = gmd.gmdToHtml(text)
+
+        def html = """${Gmd.XHTML_MATHML_DOCTYPE}
+            <html>
+            <head>
+              <meta charset="UTF-8">
+            </head>
+            <body>
+              ${snip}
+            </body></html>"""
+        def pdfFile = File.createTempFile("special", ".pdf")
+        gmd.htmlToPdf(html, pdfFile)
+        println("Wrote ${pdfFile}")
+        Assertions.assertTrue(pdfFile.exists())
+    }
 }

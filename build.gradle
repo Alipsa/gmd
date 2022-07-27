@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'se.alipsa.groovy'
-version '1.0.2'
+version '1.0.3-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -19,12 +19,19 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    def junitVersion = "5.8.2"
+    def junitVersion = "[5.8.2, )"
+    def openhtmltopdfVersion = "[1.0.10, )"
+    def log4jVersion = "[2.18.0, )"
     implementation "org.apache.groovy:groovy-all:[4.0.4, )"
-    implementation 'com.vladsch.flexmark:flexmark-all:[0.64.0,)'
+    implementation "org.apache.logging.log4j:log4j-api:${log4jVersion}"
+    implementation "com.vladsch.flexmark:flexmark-all:[0.64.0,)"
+    implementation "com.openhtmltopdf:openhtmltopdf-mathml-support:${openhtmltopdfVersion}"
+    implementation "com.openhtmltopdf:openhtmltopdf-svg-support:${openhtmltopdfVersion}"
+    implementation "com.openhtmltopdf:openhtmltopdf-java2d:${openhtmltopdfVersion}"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    testRuntimeOnly "org.apache.logging.log4j:log4j-core:${log4jVersion}"
 }
 
 test {
@@ -84,5 +91,9 @@ publishing {
 }
 
 signing {
-    sign publishing.publications.maven
+    if ( !signing.signatory ) {
+        logger.warn "No signatory defined. Skipping signing..."
+    } else {
+        sign publishing.publications.maven
+    }
 }
