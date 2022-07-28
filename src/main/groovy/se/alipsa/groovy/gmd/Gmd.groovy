@@ -1,5 +1,6 @@
 package se.alipsa.groovy.gmd
 
+import static se.alipsa.groovy.gmd.HtmlDecorator.*
 import com.openhtmltopdf.mathmlsupport.MathMLDrawer
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer
@@ -82,9 +83,20 @@ class Gmd {
         return renderer.render(document)
     }
 
+    String mdToHtmlDoc(String markdown) {
+        return decorate(mdToHtml(markdown))
+    }
+
     void mdToHtml(String markdown, File target) {
         Node document = parser.parse(markdown)
-        target.text = renderer.render(document)
+        target.write(renderer.render(document))
+    }
+
+    void mdToHtmlDoc(String markdown, File target) {
+        if (target == null) {
+            throw new IllegalArgumentException("target file canot be null")
+        }
+        target.write(mdToHtmlDoc(markdown))
     }
 
     void mdToPdf(String md, File target) {
@@ -94,7 +106,8 @@ class Gmd {
     }
 
     void mdToPdf(String md, OutputStream target) {
-        String html = mdToHtml(md)
+        String html = mdToHtmlDoc(md)
+        // TODO: "run" the html so that highlightJs can add appropriate style to the code sections
         PdfConverterExtension.exportToPdf(target, html, "", pdfOptions)
     }
 
@@ -103,9 +116,19 @@ class Gmd {
         return mdToHtml(md)
     }
 
+    String gmdToHtmlDoc(String gmd) {
+        String md = gmdToMd(gmd)
+        return mdToHtmlDoc(md)
+    }
+
     String gmdToHtml(String gmd, Map bindings) {
         String md = gmdToMd(gmd, bindings)
         return mdToHtml(md)
+    }
+
+    String gmdToHtmlDoc(String gmd, Map bindings) {
+        String md = gmdToMd(gmd, bindings)
+        return mdToHtmlDoc(md)
     }
 
     void gmdToPdf(String gmd, File file) {
@@ -131,6 +154,7 @@ class Gmd {
     }
 
     void htmlToPdf(String html, OutputStream target) {
+        // TODO: "run" the html so that highlightJs can add appropriate style to the code sections
         PdfConverterExtension.exportToPdf(target, html, "", pdfOptions)
     }
 
