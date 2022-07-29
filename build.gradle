@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'se.alipsa.groovy'
-version '1.0.3'
+version '1.0.4-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -24,8 +24,18 @@ dependencies {
     def log4jVersion = "[2.18.0, )"
     implementation "org.apache.groovy:groovy-all:[4.0.4, )"
     implementation "org.apache.logging.log4j:log4j-api:${log4jVersion}"
-    implementation "com.vladsch.flexmark:flexmark-all:[0.64.0,)"
-    implementation "com.openhtmltopdf:openhtmltopdf-mathml-support:${openhtmltopdfVersion}"
+    implementation("com.vladsch.flexmark:flexmark-all:[0.64.0,)") {
+        constraints {
+            implementation "com.ibm.icu:icu4j:71.1"
+            because "CWE-190: Integer Overflow or Wraparound: com.openhtmltopdf:openhtmltopdf-rtl-support contains com.ibm.icu:icu4j:59.1"
+        }
+    }
+    implementation("com.openhtmltopdf:openhtmltopdf-mathml-support:${openhtmltopdfVersion}") {
+        constraints {
+            implementation 'commons-io:commons-io:2.11.0'
+            because "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal'): org.apache.xmlgraphics:xmlgraphics-commons:2.6 contains commons-io:commons-io:1.3.1"
+        }
+    }
     implementation "com.openhtmltopdf:openhtmltopdf-svg-support:${openhtmltopdfVersion}"
     implementation 'org.webjars:bootstrap:5.1.3'
 
