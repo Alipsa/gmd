@@ -45,15 +45,15 @@ The weather in next couple of days will be:
 
 ```
 
-This kind of markdown text can then be transformed to html or pdf using the Gmd class e.g:
+This kind of markdown text can then be transformed to html and pdf using the Gmd class e.g:
 ```groovy
 def gmd = new se.alipsa.groovy.gmd.Gmd()
 // html is a string of html markup
 def html = gmd.gmdToHtml(text)
 
-// create a pdf file from the groovy markdown
+// create a pdf file from the html
 def pdfFile = File.createTempFile("weather", ".pdf")
-gmd.gmdToPdf(text, pdfFile)
+gmd.htmlToPdf(html, pdfFile)
 ```
 
 If you want to pass parameters to be used in the gmd text/file you can do that like this:
@@ -65,23 +65,129 @@ def md = gmd.gmdToMd(text, [name: "Per"])
 // Or directly to html
 def html = gmd.gmdToHtml(text, [name: "Per"])
 
-// Or pdf
-gmd.gmdToPdf(text, [name: "Per"], new File("pdfFile.pdf"))
+// the html can then be used to create a pdf pdf
+gmd.htmlToPdf(html, [name: "Per"], new File("pdfFile.pdf"))
 ```
 
-For "Special" characters e.g. match symbol, you should use the html escape codes. E.g.
-to write `X = ∑(√2π + ∛3)`, you need to do `X = &sum;(&radic;2&pi; + &#8731;3)` and scope the 
+For "Special" characters e.g. match symbol, you could use the html escape codes. E.g.
+to write `X = ∑(√2π + ∛3)`, you could do `X = &amp;sum;(&amp;radic;2&amp;pi; + &amp;#8731;3)` and scope the 
 expression with parenthesis as appropriate. Otherwise, it will show up as `X = ?(?2? + ?3)` when you turn it into html or pdf.
 See [HTML Math Symbols](https://www.toptal.com/designers/htmlarrows/math/) for an extensive list.
-Please note that there is a problem with special characters when rendering pdf's. So until that is fixed, stick with 
-rendering the gmd as html and then product the pdf by using some external tool instead.
+An alternative is to generate a whole html doc encoded in UTF-8 that includes unicode fonts. 
+The gmdToHtmlDoc() and mdToHtmlDoc() does just that. Those methods also includes highlightJs and Bootstrap in the html.
 
+HighlightJS requires the execution of the highligtJs init script for the code sections to be properly formatted. 
+In order for this to happen, the html code need to be rendered in a browser with javascript support. 
 
-The package is available from maven central:
+Here is an example of doing this using a javaFx WebView:
+```groovy
+import org.jsoup.Jsoup
+import org.jsoup.helper.W3CDom
+import org.jsoup.nodes.Entities
+import org.w3c.dom.Document
+
+import javax.xml.transform.OutputKeys
+import javax.xml.transform.Transformer
+import javax.xml.transform.TransformerException
+import javax.xml.transform.TransformerFactory
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamResult
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import javafx.scene.web.WebView
+
+import se.alipsa.groovy.gmd.Gmd
+
+/**
+ * We load the html into a web view so that the highlight javascript properly add classes to code parts
+ * then we extract the DOM from the web view and use that to produce the PDF
+ * @param html a string containing the html to render
+ * @param target the pdf file to write to
+ * @param gmd the Gmd object used to write the pdf
+ */
+void saveHtmlAsPdf(String html, File target, Gmd gmd) {
+  WebView webview = new WebView()
+  final WebEngine webEngine = webview.getEngine()
+  webEngine.setJavaScriptEnabled(true)
+  webEngine.setUserStyleSheetLocation(Gmd.BOOTSTRAP_CSS)
+  webEngine.getLoadWorker().stateProperty().addListener(
+    (ov, oldState, newState) -> {
+      if (newState == Worker.State.SUCCEEDED) {
+        Document doc = webEngine.getDocument()
+
+        try(OutputStream os = Files.newOutputStream(target.toPath()))  {
+          String viewContent = toString(doc)
+
+          // the raw DOM document will not work so we have to parse it again with jsoup to get
+          // something that the PdfRendererBuilder (used in gmd) understands
+          org.jsoup.nodes.Document doc2 = Jsoup.parse(viewContent)
+          doc2.outputSettings().syntax(org.jsoup.nodes.Document.OutputSettings.Syntax.xml)
+              .escapeMode(Entities.EscapeMode.extended)
+              .charset(StandardCharsets.UTF_8)
+              .prettyPrint(false)
+          Document doc3 = new W3CDom().fromJsoup(doc2)
+          gmd.htmlToPdf(doc3, os)
+        } 
+      }
+    })
+  webEngine.loadContent(html);
+}
+
+/**
+ * Convert a W3C document to a string
+ * @param doc
+ * @return the String representation of the document
+ * @throws TransformerException if it is not possible to transform the document
+ */
+String toString(Document doc) throws TransformerException {
+  Transformer transformer = TransformerFactory.newInstance().newTransformer();
+  transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+  transformer.setOutputProperty(OutputKeys.METHOD, "html");
+  transformer.setOutputProperty(OutputKeys.INDENT, "no");
+  transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+
+  StringWriter sw = new StringWriter();
+  transformer.transform(new DOMSource(doc), new StreamResult(sw));
+  return sw.toString();
+}
+
+// Example usage:
+def text = """
+# Test
+
+<%
+def a = 3
+for (i in 1..a) {
+  out.println('Hello ' + i)  
+}
+%>
+
+- first 
+- second
+
+&grave;&grave;&grave;groovy
+def q = 213
+println('q is ' + q)
+&grave;&grave;&grave;
+ 
+X = ∑(√2π + ∛3) = <%=Math.sqrt(2* Math.PI) + Math.cbrt(3)%>
+"""
+def gmd = new Gmd()
+def html = gmd.gmdToHtmlDoc(text)
+
+// create a pdf file from the html
+def pdfFile = File.createTempFile("test", ".pdf")
+saveHtmlAsPdf(html, pdfFile, gmd)
+
+```
+Alternatives to using JavaFx WebView might be [Web-K](https://github.com/Earnix/Web-K) or [J2V8](https://github.com/eclipsesource/J2V8)
+but I have not tested any of those.
+
+The library is available from maven central:
 
 Gradle: 
 ```groovy
-implementation "se.alipsa.groovy:gmd:1.0.2"
+implementation "se.alipsa.groovy:gmd:1.0.3"
 ```
 
 Maven:
@@ -89,11 +195,15 @@ Maven:
 <dependency>
     <groupId>se.alipsa.groovy</groupId>
     <artifactId>gmd</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 
 Release history
+
+### v1.0.3, 2022-07-29
+- remove gmdToPdf and mdToPdf methods since the output is not faithful to the html
+- add docs on how to render a pdf faithful to the html
 
 ### v1.0.2, 2022-07-26
 - add htmlToPdf methods

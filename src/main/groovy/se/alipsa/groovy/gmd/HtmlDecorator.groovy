@@ -169,5 +169,4 @@ class HtmlDecorator {
     }
     return "<link rel='stylesheet' href='" + BOOTSTRAP_CSS + "'>"
   }
-
 }

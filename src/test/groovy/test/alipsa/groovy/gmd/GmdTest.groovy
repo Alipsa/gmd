@@ -70,7 +70,8 @@ class GmdTest {
   void gmdToPdf() {
     def gmd = new Gmd()
     def pdfFile = File.createTempFile("weather", ".pdf")
-    gmd.gmdToPdf(text, pdfFile)
+    def html = gmd.gmdToHtmlDoc(text)
+    gmd.htmlToPdf(html, pdfFile)
     assertTrue(pdfFile.exists())
     pdfFile.delete()
   }
@@ -95,8 +96,9 @@ class GmdTest {
   void gmdToPdfWithParameter() {
     def text = '## Hello ${name}!'
     def gmd = new Gmd()
+    def html = gmd.gmdToHtmlDoc(text, [name: "Per"])
     def pdfFile = File.createTempFile("weather", ".pdf")
-    gmd.gmdToPdf(text, [name: "Per"], pdfFile)
+    gmd.htmlToPdf(html, pdfFile)
     assertTrue(pdfFile.exists())
     pdfFile.delete()
   }
@@ -119,25 +121,18 @@ class GmdTest {
   void testPdfWithSpecialCharacters() {
     String text = """\
         # Some equations
-        X = &sum;(&radic;2&pi; + &#8731;3)
+        X = ∑(√2π + ∛3)
         """.stripIndent()
 
     def gmd = new Gmd()
-    String snip = gmd.gmdToHtml(text)
+    String html = gmd.gmdToHtmlDoc(text)
 
-    def html = """${Gmd.XHTML_MATHML_DOCTYPE}
-      <html>
-        <head>
-          <meta charset="UTF-8">
-        </head>
-        <body>
-          ${snip}
-        </body>
-      </html>"""
+    assertTrue(html.contains("<h1>Some equations</h1>\n<p>X = ∑(√2π + ∛3)</p>\n"))
+
     def pdfFile = File.createTempFile("special", ".pdf")
     gmd.htmlToPdf(html, pdfFile)
-    println("Wrote ${pdfFile}")
     assertTrue(pdfFile.exists())
+    pdfFile.delete()
   }
 
   @Test
