@@ -149,7 +149,16 @@ class Gmd {
         PdfConverterExtension.exportToPdf(target, html, "", pdfOptions)
     }
 
-    void htmlToPdf(String html, File file) {
+    void (String html, File file) {
+        if (file == null) {
+            throw new IllegalArgumentException("File parameter cannot be null")
+        }
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs()
+        }
+        if (!file.exists()) {
+            file.createNewFile()
+        }
         try (OutputStream out = Files.newOutputStream(file.toPath())) {
             htmlToPdf(html, out)
         }

@@ -200,7 +200,10 @@ Maven:
 ```
 
 Release history
+### v1.0.4, TBD
+- htmlToPdf now creates the file if it does not exist
 
+ 
 ### v1.0.3, 2022-07-29
 - remove gmdToPdf and mdToPdf methods since the output is not faithful to the html
 - add docs on how to render a pdf faithful to the html
