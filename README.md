@@ -200,6 +200,9 @@ Maven:
 ```
 
 Release history
+
+### v1.0.5
+
 ### v1.0.4, 2022-08-16
 - htmlToPdf now creates the file if it does not exist
 - upgrade bootstrap to 5.2.0
