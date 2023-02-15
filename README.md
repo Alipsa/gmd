@@ -187,7 +187,7 @@ The library is available from maven central:
 
 Gradle: 
 ```groovy
-implementation "se.alipsa.groovy:gmd:1.0.4"
+implementation "se.alipsa.groovy:gmd:1.0.5"
 ```
 
 Maven:
@@ -195,14 +195,14 @@ Maven:
 <dependency>
     <groupId>se.alipsa.groovy</groupId>
     <artifactId>gmd</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
 </dependency>
 ```
 
 Release history
 
 ### v1.0.5
-
+- Change groovy dependency from implementation to compileOnly
 ### v1.0.4, 2022-08-16
 - htmlToPdf now creates the file if it does not exist
 - upgrade bootstrap to 5.2.0

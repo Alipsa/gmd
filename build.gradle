@@ -4,11 +4,11 @@ plugins {
     id 'signing'
     id 'maven-publish'
     id('io.github.gradle-nexus.publish-plugin') version '1.1.0'
-    id "com.github.ben-manes.versions" version "0.42.0"
+    id "com.github.ben-manes.versions" version "0.45.0"
 }
 
 group 'se.alipsa.groovy'
-version '1.0.5-SNAPSHOT'
+version '1.0.5'
 
 repositories {
     mavenCentral()
@@ -23,7 +23,11 @@ dependencies {
     def junitVersion = "[5.9.0, )"
     def openhtmltopdfVersion = "[1.0.10, )"
     def log4jVersion = "[2.18.0, )"
-    implementation "org.apache.groovy:groovy-all:[4.0.4, )"
+    def groovyVersion = "4.0.9"
+    // By using compileOnly instead of implementation, the jar will not be available at runtime
+    // and hence users can use whatever compatible version of Groovy that they want
+    compileOnly "org.apache.groovy:groovy:${groovyVersion}"
+    compileOnly "org.apache.groovy:groovy-templates:${groovyVersion}"
     implementation "org.apache.logging.log4j:log4j-api:${log4jVersion}"
     implementation("com.vladsch.flexmark:flexmark-all:[0.64.0,)") {
         constraints {
@@ -38,11 +42,13 @@ dependencies {
         }
     }
     implementation "com.openhtmltopdf:openhtmltopdf-svg-support:${openhtmltopdfVersion}"
-    implementation 'org.webjars:bootstrap:5.2.0'
+    implementation 'org.webjars:bootstrap:5.2.3'
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     testRuntimeOnly "org.apache.logging.log4j:log4j-core:${log4jVersion}"
+    testImplementation "org.apache.groovy:groovy:${groovyVersion}"
+    testImplementation "org.apache.groovy:groovy-templates:${groovyVersion}"
 }
 
 test {
