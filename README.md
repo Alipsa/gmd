@@ -69,6 +69,8 @@ def html = gmd.gmdToHtml(text, [name: "Per"])
 gmd.htmlToPdf(html, [name: "Per"], new File("pdfFile.pdf"))
 ```
 
+An approach similar to rmd is also supported.
+
 For "Special" characters e.g. match symbol, you could use the html escape codes. E.g.
 to write `X = ∑(√2π + ∛3)`, you could do `X = &amp;sum;(&amp;radic;2&amp;pi; + &amp;#8731;3)` and scope the 
 expression with parenthesis as appropriate. Otherwise, it will show up as `X = ?(?2? + ?3)` when you turn it into html or pdf.
@@ -201,8 +203,12 @@ Maven:
 
 Release history
 
-### v1.0.5
+### v1.0.6
+- add support for executing groovy code in the code md code snippets
+
+### v1.0.5, 2023-02-15
 - Change groovy dependency from implementation to compileOnly
+
 ### v1.0.4, 2022-08-16
 - htmlToPdf now creates the file if it does not exist
 - upgrade bootstrap to 5.2.0

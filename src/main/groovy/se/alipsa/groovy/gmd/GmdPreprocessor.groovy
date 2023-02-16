@@ -26,6 +26,7 @@ class GmdPreprocessor {
      * @return the gmd text with code blocks "expanded"
      */
     static String processCodeBlocks(String text) {
+        boolean shouldBeProcessed = false
         boolean codeBlockStart = false
         boolean codeBlockEnd = false
         boolean echo = true
@@ -38,6 +39,7 @@ class GmdPreprocessor {
             noSpaceLine = line.replace(' ', '').trim()
 
             if (noSpaceLine.startsWith('```{groovy')) {
+                shouldBeProcessed = true
                 codeBlockStart = true
                 codeBlockEnd = false
                 if (noSpaceLine.toLowerCase().contains("echo=false")) {
@@ -68,6 +70,10 @@ class GmdPreprocessor {
             }
             count++
         }
-        return result.toString()
+        if (shouldBeProcessed) {
+            return result.toString()
+        } else {
+            return text
+        }
     }
 }
