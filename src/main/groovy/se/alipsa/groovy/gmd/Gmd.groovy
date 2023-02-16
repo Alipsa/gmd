@@ -1,18 +1,5 @@
 package se.alipsa.groovy.gmd
 
-import org.jetbrains.annotations.NotNull
-import org.jsoup.Jsoup
-import org.jsoup.helper.W3CDom
-import org.jsoup.nodes.Entities
-
-import javax.xml.transform.OutputKeys
-import javax.xml.transform.Transformer
-import javax.xml.transform.TransformerException
-import javax.xml.transform.TransformerFactory
-import javax.xml.transform.dom.DOMSource
-import javax.xml.transform.stream.StreamResult
-import java.nio.charset.StandardCharsets
-
 import static se.alipsa.groovy.gmd.HtmlDecorator.*
 import com.openhtmltopdf.mathmlsupport.MathMLDrawer
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
@@ -77,7 +64,7 @@ class Gmd {
      * @return a markdown text document
      */
     String gmdToMd(String text, Map bindings) {
-        def template = engine.createTemplate(text)
+        def template = engine.createTemplate(GmdPreprocessor.processCodeBlocks(text))
         return template.make(bindings)
     }
 
@@ -87,7 +74,8 @@ class Gmd {
      * @return a markdown text document
      */
     String gmdToMd(String text) {
-        def template = engine.createTemplate(text)
+        def updatedText = GmdPreprocessor.processCodeBlocks(text)
+        def template = engine.createTemplate(updatedText)
         return template.make()
     }
 
