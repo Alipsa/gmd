@@ -229,7 +229,7 @@ The library is available from maven central:
 
 Gradle: 
 ```groovy
-implementation "se.alipsa.groovy:gmd:1.0.5"
+implementation "se.alipsa.groovy:gmd:1.0.6"
 ```
 
 Maven:
