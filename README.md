@@ -4,8 +4,9 @@ Groovy markdown is basically markdown with some groovy code for dynamic renderin
 It is based on the Groovy [StreamingTemplateEngine](https://groovy-lang.org/templating.html) and the [Flexmark
 Markdown package](https://github.com/vsch/flexmark-java).
 
-A gmd file (or text) is markdown with groovy code enclosed between <% %> bracket (or <%= %> for direct value output). 
-Here is a simple example:
+A gmd file (or text) is markdown with groovy code enclosed between <% %> bracket (or <%= %> for direct value output) or
+in the more tradition markdown style in codeblocks starting with \```{groovy}
+Here is a simple example of using <% %>:
 
 ```jsp
 <% 
@@ -70,6 +71,44 @@ gmd.htmlToPdf(html, [name: "Per"], new File("pdfFile.pdf"))
 ```
 
 An approach similar to rmd is also supported.
+
+```markdown
+    # The thing
+    Here it is
+    ```{groovy}
+      import java.time.LocalDate
+      import java.time.format.TextStyle
+      import java.util.Locale
+
+      def now = LocalDate.parse("2022-07-23")
+      def dayName(theDate) {
+        return theDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault())
+      }
+      out.println "Today (" + dayName(now) + ") is " + now + "."
+    ```
+    How about that?    
+```
+Will generate the following markdown
+```markdown
+# The thing
+Here it is
+\``` {groovy}
+  import java.time.LocalDate
+  import java.time.format.TextStyle
+  import java.util.Locale
+
+  def now = LocalDate.parse("2022-07-23")
+  def dayName(theDate) {
+    return theDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault())
+  }
+  out.println "Today (" + dayName(now) + ") is " + now + "."
+\```
+Today (Saturday) is 2022-07-23.
+
+How about that?
+```
+If you don't want to echo the code in the Markdown document you can set the 
+echo property to false e.g. \```{groovy echo=false}
 
 For "Special" characters e.g. match symbol, you could use the html escape codes. E.g.
 to write `X = ∑(√2π + ∛3)`, you could do `X = &amp;sum;(&amp;radic;2&amp;pi; + &amp;#8731;3)` and scope the 
@@ -197,7 +236,7 @@ Maven:
 <dependency>
     <groupId>se.alipsa.groovy</groupId>
     <artifactId>gmd</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
 </dependency>
 ```
 

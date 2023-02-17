@@ -182,4 +182,44 @@ class GmdTest {
     assertTrue(html.contains("root{--bs-blue:"), "Bootrap style missing")
     assertTrue(html.contains("hljs=function()"), "highlighJs init script missing")
   }
+
+  @Test
+  void traditionalMarkdownCode() {
+    def text = """
+    # The thing
+    Here it is
+    ```{groovy}
+      import java.time.LocalDate
+      import java.time.format.TextStyle
+      import java.util.Locale
+
+      def now = LocalDate.parse("2022-07-23")
+      def dayName(theDate) {
+        return theDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault())
+      }
+      out.println "Today (" + dayName(now) + ") is " + now + "."
+    ```
+    How about that?    
+    """.stripIndent()
+    def gmd = new Gmd()
+    def md = gmd.gmdToMd(text)
+
+    assertEquals("""
+    # The thing
+    Here it is
+    ```{groovy}
+      import java.time.LocalDate
+      import java.time.format.TextStyle
+      import java.util.Locale
+    
+      def now = LocalDate.parse("2022-07-23")
+      def dayName(theDate) {
+        return theDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault())
+      }
+      out.println "Today (" + dayName(now) + ") is " + now + "."
+    ```
+    Today (Saturday) is 2022-07-23.
+    
+    How about that?""".stripIndent(), md)
+  }
 }
