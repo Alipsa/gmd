@@ -246,7 +246,7 @@ Release history
 ### v1.0.7
 - Fix bug in code md snippets so that \```{groovy} now becomes \```groovy
 
-### v1.0.6
+### v1.0.6, 2023-02-17
 - add support for executing groovy code in the code md code snippets
 
 ### v1.0.5, 2023-02-15
