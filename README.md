@@ -89,10 +89,10 @@ An approach similar to rmd is also supported.
     How about that?    
 ```
 Will generate the following markdown
-```markdown
+````markdown
 # The thing
 Here it is
-` ```groovy
+```groovy
   import java.time.LocalDate
   import java.time.format.TextStyle
   import java.util.Locale
@@ -102,11 +102,11 @@ Here it is
     return theDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault())
   }
   out.println "Today (" + dayName(now) + ") is " + now + "."
-` ```
+```
 Today (Saturday) is 2022-07-23.
 
 How about that?
-```
+````
 If you don't want to echo the code in the Markdown document you can set the 
 echo property to false e.g. \```{groovy echo=false}
 
