@@ -5,7 +5,8 @@ It is based on the Groovy [StreamingTemplateEngine](https://groovy-lang.org/temp
 Markdown package](https://github.com/vsch/flexmark-java).
 
 A gmd file (or text) is markdown with groovy code enclosed between <% %> bracket (or <%= %> for direct value output) or
-in the more tradition markdown style in codeblocks starting with \```{groovy}
+in the more traditional markdown style in codeblocks starting with \```{groovy} (similar to rmd and mdr files).
+
 Here is a simple example of using <% %>:
 
 ```jsp
