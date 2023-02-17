@@ -55,10 +55,12 @@ class GmdPreprocessor {
             }
 
             if (codeBlockEnd) {
-                if (echo) {
-                    result.append(codeBlockText).append('```\n')
-                }
                 List<String> codeBlockCode = codeBlockText.readLines()
+                if (echo) {
+                    codeBlockCode.set(0, '```groovy')
+                    result.append(String.join('\n', codeBlockCode)).append('\n```\n')
+                }
+
                 codeBlockCode.remove(0)
                 result.append("<%\n").append(String.join('\n', codeBlockCode)).append('\n%>\n')
                 codeBlockText.setLength(0)

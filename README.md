@@ -92,7 +92,7 @@ Will generate the following markdown
 ```markdown
 # The thing
 Here it is
-\``` {groovy}
+```groovy
   import java.time.LocalDate
   import java.time.format.TextStyle
   import java.util.Locale
@@ -102,7 +102,7 @@ Here it is
     return theDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault())
   }
   out.println "Today (" + dayName(now) + ") is " + now + "."
-\```
+```
 Today (Saturday) is 2022-07-23.
 
 How about that?
@@ -241,6 +241,9 @@ Maven:
 ```
 
 Release history
+
+### v1.0.7
+- Fix bug in code md snippets so that \```{groovy} now becomes \```groovy
 
 ### v1.0.6
 - add support for executing groovy code in the code md code snippets
