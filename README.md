@@ -85,7 +85,7 @@ An approach similar to rmd is also supported.
       def dayName(theDate) {
         return theDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault())
       }
-      out.println "Today (" + dayName(now) + ") is " + now + "."
+      out.println "## Today (" + dayName(now) + ") is " + now + "."
     ```
     How about that?    
 ```
@@ -102,7 +102,7 @@ Here it is
   def dayName(theDate) {
     return theDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault())
   }
-  out.println "Today (" + dayName(now) + ") is " + now + "."
+  out.println "## Today (" + dayName(now) + ") is " + now + "."
 ```
 Today (Saturday) is 2022-07-23.
 
