@@ -65,7 +65,7 @@ class Gmd {
      */
     String gmdToMd(String text, Map bindings) {
         def template = engine.createTemplate(GmdPreprocessor.processCodeBlocks(text))
-        return template.make(bindings)
+        return String.valueOf(template.make(bindings)).replace("\r\n", "\n")
     }
 
     /**
@@ -76,7 +76,7 @@ class Gmd {
     String gmdToMd(String text) {
         def updatedText = GmdPreprocessor.processCodeBlocks(text)
         def template = engine.createTemplate(updatedText)
-        return template.make()
+        return String.valueOf(template.make()).replace("\r\n", "\n")
     }
 
     String mdToHtml(String markdown) {
