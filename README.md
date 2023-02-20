@@ -4,10 +4,67 @@ Groovy markdown is basically markdown with some groovy code for dynamic renderin
 It is based on the Groovy [StreamingTemplateEngine](https://groovy-lang.org/templating.html) and the [Flexmark
 Markdown package](https://github.com/vsch/flexmark-java).
 
-A gmd file (or text) is markdown with groovy code enclosed between <% %> bracket (or <%= %> for direct value output) or
-in the more traditional markdown style in codeblocks starting with \```{groovy} (similar to rmd and mdr files).
+A gmd file (or text) is markdown with groovy code in codeblocks starting with \```{groovy} and ending with \```
+(similar to rmd and mdr files). An alternative syntax where code is enclosed between <% %> bracket 
+(or <%= %> for direct value output) or is also supported.
 
-Here is a simple example of using <% %>:
+There are some advantages with the codeblock (\```{groovy}) approach over the scriptlet (<% %>) one, 
+mainly that variables and functions are "remembered" and can be used further down in the gmd document.
+
+Here is an example:
+
+```markdown
+    # The thing
+    Here it is
+    ```{groovy}
+      import java.time.LocalDate
+      import java.time.format.TextStyle
+      import java.util.Locale
+
+      def now = LocalDate.parse("2022-07-23")
+      def dayName(theDate) {
+        return theDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault())
+      }
+      out.println "## Today (" + dayName(now) + ") is " + now + "."
+    ```
+    How about that?    
+```
+This will generate the following markdown
+````markdown
+# The thing
+Here it is
+```groovy
+  import java.time.LocalDate
+  import java.time.format.TextStyle
+  import java.util.Locale
+
+  def now = LocalDate.parse("2022-07-23")
+  def dayName(theDate) {
+    return theDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault())
+  }
+  out.println "## Today (" + dayName(now) + ") is " + now + "."
+```
+Today (Saturday) is 2022-07-23.
+
+How about that?
+````
+If you don't want to echo the code in the Markdown document you can set the
+echo property to false e.g. \```{groovy echo=false}
+
+Inline variables (similar to the <%= expression %> syntax in scriptlets) can be done using \`= expression \`
+here is an example:
+````markdown
+```{groovy echo=false}
+    aVal = 123 + 234
+```
+123 + 234 = `= aVal `
+````
+Which will result in
+```markdown
+123 + 234 = 357
+```
+
+Here is a simple example of using scriptlets (<% %>):
 
 ```jsp
 <% 
@@ -69,59 +126,6 @@ def html = gmd.gmdToHtml(text, [name: "Per"])
 
 // the html can then be used to create a pdf pdf
 gmd.htmlToPdf(html, [name: "Per"], new File("pdfFile.pdf"))
-```
-
-An approach similar to rmd is also supported (and in some cases superior to scriptlet code).
-
-```markdown
-    # The thing
-    Here it is
-    ```{groovy}
-      import java.time.LocalDate
-      import java.time.format.TextStyle
-      import java.util.Locale
-
-      def now = LocalDate.parse("2022-07-23")
-      def dayName(theDate) {
-        return theDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault())
-      }
-      out.println "## Today (" + dayName(now) + ") is " + now + "."
-    ```
-    How about that?    
-```
-Will generate the following markdown
-````markdown
-# The thing
-Here it is
-```groovy
-  import java.time.LocalDate
-  import java.time.format.TextStyle
-  import java.util.Locale
-
-  def now = LocalDate.parse("2022-07-23")
-  def dayName(theDate) {
-    return theDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault())
-  }
-  out.println "## Today (" + dayName(now) + ") is " + now + "."
-```
-Today (Saturday) is 2022-07-23.
-
-How about that?
-````
-If you don't want to echo the code in the Markdown document you can set the 
-echo property to false e.g. \```{groovy echo=false}
-
-Inline variables (similar to the <%= expression %> syntax) can be done using \`= expression \`
-here is an example:
-````markdown
-```{groovy echo=false}
-    aVal = 123 + 234
-```
-123 + 234 = `= aVal `
-````
-Which will result in 
-```markdown
-123 + 234 = 357
 ```
 
 For "Special" characters e.g. match symbol, you could use the html escape codes. E.g.
