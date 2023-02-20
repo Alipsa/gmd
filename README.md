@@ -71,7 +71,7 @@ def html = gmd.gmdToHtml(text, [name: "Per"])
 gmd.htmlToPdf(html, [name: "Per"], new File("pdfFile.pdf"))
 ```
 
-An approach similar to rmd is also supported.
+An approach similar to rmd is also supported (and in some cases superior to scriptlet code).
 
 ```markdown
     # The thing
@@ -110,6 +110,19 @@ How about that?
 ````
 If you don't want to echo the code in the Markdown document you can set the 
 echo property to false e.g. \```{groovy echo=false}
+
+Inline variables (similar to the <%= expression %> syntax) can be done using \`= expression \`
+here is an example:
+````markdown
+```{groovy echo=false}
+    aVal = 123 + 234
+```
+123 + 234 = `= aVal `
+````
+Which will result in 
+```markdown
+123 + 234 = 357
+```
 
 For "Special" characters e.g. match symbol, you could use the html escape codes. E.g.
 to write `X = ∑(√2π + ∛3)`, you could do `X = &amp;sum;(&amp;radic;2&amp;pi; + &amp;#8731;3)` and scope the 

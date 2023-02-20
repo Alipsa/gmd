@@ -219,7 +219,6 @@ class GmdTest {
       out.println "Today (" + dayName(now) + ") is " + now + "."
     ```
     Today (Saturday) is 2022-07-23.
-    
     How about that?""".stripIndent(), md)
   }
 }
