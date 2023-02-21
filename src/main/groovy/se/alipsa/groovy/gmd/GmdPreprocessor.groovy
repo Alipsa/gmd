@@ -2,6 +2,8 @@ package se.alipsa.groovy.gmd
 
 import org.codehaus.groovy.jsr223.GroovyScriptEngineImpl
 
+import java.util.regex.Matcher
+
 class GmdPreprocessor {
 
 
@@ -98,9 +100,12 @@ class GmdPreprocessor {
 
     /**
      * Evaluate and replace all `= ` inline code blocks
+     * the expression `= aVal ` is matched into two parts
+     * one containing the full expression (`= aVal `) and the other
+     * just the part to be evaluated (aVal )
      */
     static String expandInlineVars(String line, GroovyScriptEngineImpl engine) {
-        def matcher = line =~ ~/`= (.+?)`/
+        Matcher matcher = line =~ /`= (.+?)`/
         String newLine = line
         if (matcher.find()) {
             List<List<String>> matches = matcher.findAll()

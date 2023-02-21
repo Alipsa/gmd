@@ -12,7 +12,17 @@ class HtmlDecorator {
   public static final String BOOTSTRAP_CSS_PATH = "/META-INF/resources/webjars/bootstrap/5.2.3/css/bootstrap.min.css"
   public static final String HIGHLIGHT_JS_INIT = "\n<script>hljs.highlightAll();</script>\n"
   public static final String HIGHLIGHT_JS_CSS = "\n<link rel='stylesheet' href='" + resourceUrlExternalForm(HIGHLIGHT_JS_CSS_PATH) + "'>\n"
-  public static final String HIGHLIGHT_JS_SCRIPT = "\n<script src='" + resourceUrlExternalForm(HIGHLIGHT_JS_SCRIPT_PATH) + "'></script>\n"
+  public static final String HIGHLIGHT_JS_SCRIPT = script(HIGHLIGHT_JS_SCRIPT_PATH) +
+          script("/highlightJs/languages/groovy.min.js") +
+          script("/highlightJs/languages/r.min.js") +
+          script("/highlightJs/languages/java.min.js") +
+          script("/highlightJs/languages/sas.min.js") +
+          script("/highlightJs/languages/java.min.js") +
+          script("/highlightJs/languages/json.min.js") +
+          script("/highlightJs/languages/markdown.min.js") +
+          script("/highlightJs/languages/python.min.js") +
+          script("/highlightJs/languages/sql.min.js")
+
   public static final String BOOTSTRAP_CSS = resourceUrlExternalForm(BOOTSTRAP_CSS_PATH)
 
   public static final String HTML5_DECLARATION = "<!DOCTYPE html>\n"
@@ -80,6 +90,10 @@ class HtmlDecorator {
   private static final String BOOTSTRAP_STYLE = getBootstrapStyle(true)
 
   private static String HIGHLIGHT_STYLE = getHighlightStyle(true)
+
+  private static String script(String path) {
+    return  "<script src='" + resourceUrlExternalForm(path) + "'></script>\n"
+  }
 
   private static String resourceUrlExternalForm(String resource) {
     URL url = HtmlDecorator.class.getResource(resource)
