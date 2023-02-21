@@ -7,10 +7,10 @@ class HtmlDecorator {
 
   private static final Logger log = LogManager.getLogger()
 
-  public static final String HIGHLIGHT_JS_CSS_PATH = "/highlightJs/default.min.css"
+  public static final String HIGHLIGHT_JS_CSS_PATH = "/highlightJs/styles/default.min.css"
   public static final String HIGHLIGHT_JS_SCRIPT_PATH = "/highlightJs/highlight.min.js"
   public static final String BOOTSTRAP_CSS_PATH = "/META-INF/resources/webjars/bootstrap/5.2.3/css/bootstrap.min.css"
-  public static final String HIGHLIGHT_JS_INIT = "\n<script>hljs.initHighlightingOnLoad();</script>\n"
+  public static final String HIGHLIGHT_JS_INIT = "\n<script>hljs.highlightAll();</script>\n"
   public static final String HIGHLIGHT_JS_CSS = "\n<link rel='stylesheet' href='" + resourceUrlExternalForm(HIGHLIGHT_JS_CSS_PATH) + "'>\n"
   public static final String HIGHLIGHT_JS_SCRIPT = "\n<script src='" + resourceUrlExternalForm(HIGHLIGHT_JS_SCRIPT_PATH) + "'></script>\n"
   public static final String BOOTSTRAP_CSS = resourceUrlExternalForm(BOOTSTRAP_CSS_PATH)

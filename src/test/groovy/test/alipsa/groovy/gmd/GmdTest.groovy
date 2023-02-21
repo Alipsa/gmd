@@ -203,7 +203,7 @@ class GmdTest {
     """.stripIndent()
     def gmd = new Gmd()
     def md = gmd.gmdToMd(text)
-
+    
     assertEquals("""
     # The thing
     Here it is
