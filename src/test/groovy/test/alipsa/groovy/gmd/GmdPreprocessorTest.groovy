@@ -88,5 +88,18 @@ Hello World
         assertEquals("""
         123 + 234 = 357
         """, GmdPreprocessor.processCodeBlocks(text))
+
+        text = """
+        ```{groovy echo=false}
+        x = 5
+        ```
+        X = `= x`
+        
+        """.stripIndent()
+
+        assertEquals("""
+        X = 5
+        """.stripIndent(), GmdPreprocessor.processCodeBlocks(text))
+
     }
 }

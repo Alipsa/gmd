@@ -1,5 +1,7 @@
 package test.alipsa.groovy.gmd
 
+import se.alipsa.groovy.gmd.GmdPreprocessor
+
 import static org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import se.alipsa.groovy.gmd.Gmd
@@ -220,5 +222,24 @@ class GmdTest {
     ```
     Today (Saturday) is 2022-07-23.
     How about that?""".stripIndent(), md)
+  }
+
+  @Test
+  void testInlineVars() {
+    def gmd = new Gmd()
+    text = """
+        ```{groovy echo=false}
+        x = 5
+        ```
+        X = `= x`
+        
+        """.stripIndent()
+
+    assertEquals("""
+        X = 5
+        """.stripIndent(), gmd.gmdToMd(text))
+
+    assertEquals("""<p>X = 5</p>
+        """.stripIndent(), gmd.gmdToHtml(text))
   }
 }

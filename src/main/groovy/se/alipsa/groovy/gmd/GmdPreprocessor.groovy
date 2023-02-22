@@ -79,7 +79,7 @@ class GmdPreprocessor {
                     codeBlockText.setLength(0)
                     codeBlockEnd = false
                 } else if (!codeBlockStart) {
-                    if (line.contains('`= ')) {
+                    if (line.contains('`=')) {
                         shouldBeProcessed = true
                         result.append(expandInlineVars(line, engine))
                     } else {
