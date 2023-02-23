@@ -121,4 +121,9 @@ class GmdPreprocessor {
         }
 
     }
+
+    @Override
+    String toString() {
+        return "Groovy Markdown Processor, ver 1.0.7-SNAPSHOT"
+    }
 }
