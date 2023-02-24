@@ -87,11 +87,11 @@ publishing {
             pom {
                 name = 'Groovy Markdown'
                 description = 'Processing markdown text with groovy enhancements embedded and creating, markdown, html of pdf'
-                url = "https://github.com/perNyfelt/gmd"
+                url = "https://github.com/Alipsa/gmd"
                 licenses {
                     license {
                         name = 'MIT License'
-                        url = 'https://github.com/perNyfelt/gmd/blob/main/LICENSE'
+                        url = 'https://github.com/Alipsa/gmd/blob/main/LICENSE'
                     }
                 }
                 developers {
@@ -101,9 +101,9 @@ publishing {
                     }
                 }
                 scm {
-                    url = 'https://github.com/perNyfelt/gmd'
-                    connection = 'scm:git:https://github.com/perNyfelt/gmd.git'
-                    developerConnection = 'scm:git:git@github.com:perNyfelt/gmd.git'
+                    url = 'https://github.com/Alipsa/gmd'
+                    connection = 'scm:git:https://github.com/ALipsa/gmd.git'
+                    developerConnection = 'scm:git:git@github.com:Alipsa/gmd.git'
                 }
             }
         }
