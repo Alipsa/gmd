@@ -2,6 +2,8 @@ package se.alipsa.groovy.gmd
 
 import org.codehaus.groovy.jsr223.GroovyScriptEngineImpl
 
+import javax.script.ScriptContext
+import javax.script.ScriptException
 import java.util.regex.Matcher
 
 class GmdPreprocessor {
@@ -25,7 +27,7 @@ class GmdPreprocessor {
      * @param text the gmd text to process
      * @return the gmd text with code blocks "expanded"
      */
-    static String processCodeBlocks(String text) {
+    static String processCodeBlocks(String text) throws ScriptException {
         def classLoader = new GroovyClassLoader();
         def engine = new GroovyScriptEngineImpl(classLoader)
         try (Printer out = new Printer()) {
@@ -104,7 +106,7 @@ class GmdPreprocessor {
      * one containing the full expression (`= aVal `) and the other
      * just the part to be evaluated (aVal )
      */
-    static String expandInlineVars(String line, GroovyScriptEngineImpl engine) {
+    static String expandInlineVars(String line, GroovyScriptEngineImpl engine) throws ScriptException {
         Matcher matcher = line =~ /`=(.+?)`/
         String newLine = line
         if (matcher.find()) {

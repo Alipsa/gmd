@@ -1,5 +1,7 @@
 package se.alipsa.groovy.gmd
 
+import javax.script.ScriptException
+
 import static se.alipsa.groovy.gmd.HtmlDecorator.*
 import com.openhtmltopdf.mathmlsupport.MathMLDrawer
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
@@ -63,7 +65,7 @@ class Gmd {
      * @param bindings the variables to resolve in the text
      * @return a markdown text document
      */
-    String gmdToMd(String text, Map bindings) {
+    String gmdToMd(String text, Map bindings) throws ScriptException {
         def template = engine.createTemplate(GmdPreprocessor.processCodeBlocks(text))
         return String.valueOf(template.make(bindings)).replace("\r\n", "\n")
     }
@@ -73,18 +75,18 @@ class Gmd {
      * @param text
      * @return a markdown text document
      */
-    String gmdToMd(String text) {
+    String gmdToMd(String text) throws ScriptException {
         def updatedText = GmdPreprocessor.processCodeBlocks(text)
         def template = engine.createTemplate(updatedText)
         return String.valueOf(template.make()).replace("\r\n", "\n")
     }
 
-    String mdToHtml(String markdown) {
+    String mdToHtml(String markdown) throws ScriptException {
         Node document = parser.parse(markdown)
         return renderer.render(document)
     }
 
-    String mdToHtmlDoc(String markdown) {
+    String mdToHtmlDoc(String markdown) throws ScriptException {
         return decorate(mdToHtml(markdown))
     }
 
@@ -95,39 +97,39 @@ class Gmd {
 
     void mdToHtmlDoc(String markdown, File target) {
         if (target == null) {
-            throw new IllegalArgumentException("target file canot be null")
+            throw new IllegalArgumentException("target file cannot be null")
         }
         target.write(mdToHtmlDoc(markdown))
     }
 
-    void mdToPdf(String md, File target) {
+    void mdToPdf(String md, File target)  throws ScriptException, IOException {
         try(def out = Files.newOutputStream(target.toPath())) {
             mdToPdf(md, out)
         }
     }
 
-    void mdToPdf(String md, OutputStream target) {
+    void mdToPdf(String md, OutputStream target) throws ScriptException {
         String html = mdToHtmlDoc(md)
         // TODO: "run" the html so that highlightJs can add appropriate style to the code sections
         PdfConverterExtension.exportToPdf(target, html, "", pdfOptions)
     }
 
-    String gmdToHtml(String gmd) {
+    String gmdToHtml(String gmd) throws ScriptException {
         String md = gmdToMd(gmd)
         return mdToHtml(md)
     }
 
-    String gmdToHtmlDoc(String gmd) {
+    String gmdToHtmlDoc(String gmd) throws ScriptException {
         String md = gmdToMd(gmd)
         return mdToHtmlDoc(md)
     }
 
-    String gmdToHtml(String gmd, Map bindings) {
+    String gmdToHtml(String gmd, Map bindings) throws ScriptException {
         String md = gmdToMd(gmd, bindings)
         return mdToHtml(md)
     }
 
-    String gmdToHtmlDoc(String gmd, Map bindings) {
+    String gmdToHtmlDoc(String gmd, Map bindings) throws ScriptException {
         String md = gmdToMd(gmd, bindings)
         return mdToHtmlDoc(md)
     }
