@@ -246,7 +246,7 @@ The library is available from maven central:
 
 Gradle: 
 ```groovy
-implementation "se.alipsa.groovy:gmd:1.0.6"
+implementation "se.alipsa.groovy:gmd:1.0.7"
 ```
 
 Maven:
@@ -254,7 +254,7 @@ Maven:
 <dependency>
     <groupId>se.alipsa.groovy</groupId>
     <artifactId>gmd</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
 </dependency>
 ```
 
@@ -262,6 +262,8 @@ Release history
 
 ### v1.0.7
 - Fix bug in code md snippets so that \```{groovy} now becomes \```groovy
+- Add support for value insertion (`=)
+- Throw gmd exceptions if something goes wrong
 
 ### v1.0.6, 2023-02-17
 - add support for executing groovy code in the code md code snippets

@@ -1,5 +1,7 @@
 package se.alipsa.groovy.gmd
 
+import org.codehaus.groovy.control.CompilationFailedException
+
 import javax.script.ScriptException
 
 import static se.alipsa.groovy.gmd.HtmlDecorator.*
@@ -65,9 +67,13 @@ class Gmd {
      * @param bindings the variables to resolve in the text
      * @return a markdown text document
      */
-    String gmdToMd(String text, Map bindings) throws ScriptException {
-        def template = engine.createTemplate(GmdPreprocessor.processCodeBlocks(text))
-        return String.valueOf(template.make(bindings)).replace("\r\n", "\n")
+    String gmdToMd(String text, Map bindings) throws GmdException {
+        try {
+            def template = engine.createTemplate(GmdPreprocessor.processCodeBlocks(text))
+            return String.valueOf(template.make(bindings)).replace("\r\n", "\n")
+        } catch (CompilationFailedException | ClassNotFoundException | IOException e) {
+            throw new GmdException("Failed to process gmd", e)
+        }
     }
 
     /**
@@ -75,18 +81,18 @@ class Gmd {
      * @param text
      * @return a markdown text document
      */
-    String gmdToMd(String text) throws ScriptException {
+    String gmdToMd(String text) throws GmdException {
         def updatedText = GmdPreprocessor.processCodeBlocks(text)
         def template = engine.createTemplate(updatedText)
         return String.valueOf(template.make()).replace("\r\n", "\n")
     }
 
-    String mdToHtml(String markdown) throws ScriptException {
+    String mdToHtml(String markdown) throws GmdException {
         Node document = parser.parse(markdown)
         return renderer.render(document)
     }
 
-    String mdToHtmlDoc(String markdown) throws ScriptException {
+    String mdToHtmlDoc(String markdown) throws GmdException {
         return decorate(mdToHtml(markdown))
     }
 
@@ -102,34 +108,36 @@ class Gmd {
         target.write(mdToHtmlDoc(markdown))
     }
 
-    void mdToPdf(String md, File target)  throws ScriptException, IOException {
+    void mdToPdf(String md, File target)  throws GmdException {
         try(def out = Files.newOutputStream(target.toPath())) {
             mdToPdf(md, out)
+        } catch (Exception e) {
+            throw new GmdException("Failed to convert markdown to pdf", e)
         }
     }
 
-    void mdToPdf(String md, OutputStream target) throws ScriptException {
+    void mdToPdf(String md, OutputStream target) throws GmdException {
         String html = mdToHtmlDoc(md)
         // TODO: "run" the html so that highlightJs can add appropriate style to the code sections
         PdfConverterExtension.exportToPdf(target, html, "", pdfOptions)
     }
 
-    String gmdToHtml(String gmd) throws ScriptException {
+    String gmdToHtml(String gmd) throws GmdException {
         String md = gmdToMd(gmd)
         return mdToHtml(md)
     }
 
-    String gmdToHtmlDoc(String gmd) throws ScriptException {
+    String gmdToHtmlDoc(String gmd) throws GmdException {
         String md = gmdToMd(gmd)
         return mdToHtmlDoc(md)
     }
 
-    String gmdToHtml(String gmd, Map bindings) throws ScriptException {
+    String gmdToHtml(String gmd, Map bindings) throws GmdException {
         String md = gmdToMd(gmd, bindings)
         return mdToHtml(md)
     }
 
-    String gmdToHtmlDoc(String gmd, Map bindings) throws ScriptException {
+    String gmdToHtmlDoc(String gmd, Map bindings) throws GmdException {
         String md = gmdToMd(gmd, bindings)
         return mdToHtmlDoc(md)
     }
@@ -139,7 +147,7 @@ class Gmd {
         PdfConverterExtension.exportToPdf(target, html, "", pdfOptions)
     }
 
-    void htmlToPdf(String html, File file) {
+    void htmlToPdf(String html, File file) throws IOException {
         if (file == null) {
             throw new IllegalArgumentException("File parameter cannot be null")
         }
@@ -154,7 +162,7 @@ class Gmd {
         }
     }
 
-    void htmlToPdf(Document doc, OutputStream os){
+    void htmlToPdf(Document doc, OutputStream os) throws IOException {
         PdfRendererBuilder builder = new PdfRendererBuilder()
                 .withW3cDocument(doc, new File(".").toURI().toString())
                 .useSVGDrawer(new BatikSVGDrawer())

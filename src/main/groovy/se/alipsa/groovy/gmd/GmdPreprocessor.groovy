@@ -27,7 +27,7 @@ class GmdPreprocessor {
      * @param text the gmd text to process
      * @return the gmd text with code blocks "expanded"
      */
-    static String processCodeBlocks(String text) throws ScriptException {
+    static String processCodeBlocks(String text) throws GmdException {
         def classLoader = new GroovyClassLoader();
         def engine = new GroovyScriptEngineImpl(classLoader)
         try (Printer out = new Printer()) {
@@ -106,22 +106,25 @@ class GmdPreprocessor {
      * one containing the full expression (`= aVal `) and the other
      * just the part to be evaluated (aVal )
      */
-    static String expandInlineVars(String line, GroovyScriptEngineImpl engine) throws ScriptException {
-        Matcher matcher = line =~ /`=(.+?)`/
-        String newLine = line
-        if (matcher.find()) {
-            List<List<String>> matches = matcher.findAll()
-            matches.each { expVal ->
-                String expression = expVal.get(0)
-                String val = expVal.get(1)
-                String evaluatedVal = String.valueOf(engine.eval(val))
-                newLine = newLine.replace(expression, evaluatedVal)
+    static String expandInlineVars(String line, GroovyScriptEngineImpl engine) throws GmdException {
+        try {
+            Matcher matcher = line =~ /`=(.+?)`/
+            String newLine = line
+            if (matcher.find()) {
+                List<List<String>> matches = matcher.findAll()
+                matches.each { expVal ->
+                    String expression = expVal.get(0)
+                    String val = expVal.get(1)
+                    String evaluatedVal = String.valueOf(engine.eval(val))
+                    newLine = newLine.replace(expression, evaluatedVal)
+                }
+                return newLine
+            } else {
+                return line
             }
-            return newLine
-        } else {
-            return line
+        } catch (ScriptException | RuntimeException e) {
+            throw new GmdException("Failed to expand inline variables (`=)", e)
         }
-
     }
 
     @Override
