@@ -260,7 +260,7 @@ Maven:
 
 Release history
 
-### v1.0.7
+### v1.0.7, 2023-02-24
 - Fix bug in code md snippets so that \```{groovy} now becomes \```groovy
 - Add support for value insertion (`=)
 - Throw gmd exceptions if something goes wrong
