@@ -2,8 +2,6 @@ package se.alipsa.groovy.gmd
 
 import org.codehaus.groovy.control.CompilationFailedException
 
-import javax.script.ScriptException
-
 import static se.alipsa.groovy.gmd.HtmlDecorator.*
 import com.openhtmltopdf.mathmlsupport.MathMLDrawer
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
@@ -30,8 +28,6 @@ import java.nio.file.Files
  * Key class for this Groovy Markdown implementation
  */
 class Gmd {
-
-    static final XHTML_MATHML_DOCTYPE = "<!DOCTYPE html PUBLIC\n \"-//OPENHTMLTOPDF//MATH XHTML Character Entities With MathML 1.0//EN\" \"\">\n"
     final SimpleTemplateEngine engine
     final Parser parser
     final HtmlRenderer renderer

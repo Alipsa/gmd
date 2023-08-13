@@ -179,9 +179,9 @@ class GmdTest {
     assertTrue(html.startsWith("""\
       <!DOCTYPE html PUBLIC
       "-//OPENHTMLTOPDF//MATH XHTML Character Entities With MathML 1.0//EN" "">
-      <html>""".stripIndent()), "Doctype declaration is missing")
-    assertTrue(html.contains("code.hljs{"), "Highligtjs style missing")
-    assertTrue(html.contains("root{--bs-blue:"), "Bootrap style missing")
+      <html>""".stripIndent()), "Doctype declaration is missing\n" + html)
+    assertTrue(html.contains("code.hljs{"), "Highligtjs style missing:\n" + html)
+    assertTrue(html.contains("bs-blue:"), "Bootrap style missing:\n" + html)
     assertTrue(html.contains("hljs=function()"), "highlighJs init script missing")
   }
 

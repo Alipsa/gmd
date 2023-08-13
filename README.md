@@ -44,7 +44,7 @@ Here it is
   }
   out.println "## Today (" + dayName(now) + ") is " + now + "."
 ```
-Today (Saturday) is 2022-07-23.
+## Today (Saturday) is 2022-07-23.
 
 How about that?
 ````
@@ -104,7 +104,7 @@ The weather in next couple of days will be:
 
 ```
 
-This kind of markdown text can then be transformed to html and pdf using the Gmd class e.g:
+This kind of Markdown text can then be transformed to html and pdf using the Gmd class e.g:
 ```groovy
 def gmd = new se.alipsa.groovy.gmd.Gmd()
 // html is a string of html markup
@@ -240,9 +240,9 @@ saveHtmlAsPdf(html, pdfFile, gmd)
 
 ```
 Alternatives to using JavaFx WebView might be [Web-K](https://github.com/Earnix/Web-K) or [J2V8](https://github.com/eclipsesource/J2V8)
-but I have not tested any of those.
+, but I have not tested any of those.
 
-The library is available from maven central:
+The library, which requires Java 17 or later, is available from maven central:
 
 Gradle: 
 ```groovy
@@ -259,6 +259,9 @@ Maven:
 ```
 
 Release history
+
+### v1.0.8, in progress
+- upgrade dependencies (require java 17, bootstrap 5.3.1, etc.)
 
 ### v1.0.7, 2023-02-24
 - Fix bug in code md snippets so that \```{groovy} now becomes \```groovy

@@ -3,8 +3,8 @@ plugins {
     id 'java-library'
     id 'signing'
     id 'maven-publish'
-    id('io.github.gradle-nexus.publish-plugin') version '1.1.0'
-    id "com.github.ben-manes.versions" version "0.45.0"
+    id('io.github.gradle-nexus.publish-plugin') version '1.3.0'
+    id "com.github.ben-manes.versions" version "0.47.0"
 }
 
 group 'se.alipsa.groovy'
@@ -14,16 +14,16 @@ repositories {
     mavenCentral()
 }
 
-tasks.withType(JavaCompile) {
-    sourceCompatibility = "11"
-    targetCompatibility = "11"
+tasks.withType(JavaCompile).configureEach {
+    sourceCompatibility = "17"
+    targetCompatibility = "17"
 }
 
 dependencies {
-    def junitVersion = "[5.9.0, )"
+    def junitVersion = "[5.10.0, )"
     def openhtmltopdfVersion = "[1.0.10, )"
     def log4jVersion = "[2.18.0, )"
-    def groovyVersion = "4.0.9"
+    def groovyVersion = "4.0.13"
     // By using compileOnly instead of implementation, the jar will not be available at runtime
     // and hence users can use whatever compatible version of Groovy that they want
     compileOnly "org.apache.groovy:groovy:${groovyVersion}"
@@ -43,7 +43,8 @@ dependencies {
         }
     }
     implementation "com.openhtmltopdf:openhtmltopdf-svg-support:${openhtmltopdfVersion}"
-    implementation 'org.webjars:bootstrap:5.2.3'
+    // Remember to update Gmd.BOOTSTRAP_CSS_PATH if the dependency changes
+    implementation 'org.webjars:bootstrap:5.3.1'
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
@@ -51,7 +52,7 @@ dependencies {
     testImplementation "org.apache.groovy:groovy:${groovyVersion}"
     testImplementation "org.apache.groovy:groovy-templates:${groovyVersion}"
     testImplementation "org.apache.groovy:groovy-jsr223:${groovyVersion}"
-    testImplementation 'org.apache.commons:commons-lang3:3.12.0'
+    testImplementation 'org.apache.commons:commons-lang3:3.13.0'
 }
 
 test {
@@ -63,12 +64,12 @@ test {
 
 //Maven Central uploads
 task javadocJar(type: Jar, dependsOn: groovydoc) {
-    classifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from groovydoc.destinationDir
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
+    archiveClassifier.set('sources')
     from sourceSets.main.allSource
 }
 
@@ -115,5 +116,24 @@ signing {
         logger.warn "No signatory defined. Skipping signing..."
     } else {
         sign publishing.publications.maven
+    }
+}
+
+def isNonStable = { String version ->
+    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { it -> version.toUpperCase().contains(it) }
+    def regex = /^[0-9,.v-]+(-r)?$/
+    return !stableKeyword && !(version ==~ regex)
+}
+// https://github.com/ben-manes/gradle-versions-plugin
+tasks.named("dependencyUpdates").configure {
+    gradleReleaseChannel = "current"
+    resolutionStrategy {
+        componentSelection {
+            all {
+                if (isNonStable(it.candidate.version) && !isNonStable(it.currentVersion)) {
+                    reject('Release candidate')
+                }
+            }
+        }
     }
 }

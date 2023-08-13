@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-gradle dependencyUpdates -Drevision=release
+./gradlew dependencyUpdates -Drevision=release
