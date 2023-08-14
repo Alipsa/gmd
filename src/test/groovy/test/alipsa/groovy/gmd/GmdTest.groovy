@@ -69,6 +69,13 @@ class GmdTest {
   }
 
   @Test
+  void testParameterized() {
+    def gmd = new Gmd();
+    def html = gmd.gmdToHtml('Today is `= theDate`', [theDate: '2023-08-14'])
+    assertEquals('<p>Today is 2023-08-14</p>\n', html)
+  }
+
+  @Test
   void gmdToPdf() {
     def gmd = new Gmd()
     def pdfFile = File.createTempFile("weather", ".pdf")
