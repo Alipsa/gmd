@@ -1,9 +1,12 @@
 package se.alipsa.groovy.gmd;
 
+import se.alipsa.groovy.matrix.Matrix;
+
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Map;
 
 public class Printer extends PrintWriter {
     protected boolean trouble = false;
@@ -165,12 +168,15 @@ public class Printer extends PrintWriter {
      * @param x The {@code Object} to be printed.
      */
     public void println(Object x) {
-        String s = String.valueOf(x);
-        synchronized (lock) {
-            print(s);
-            println();
-        }
+        println(String.valueOf(x));
+    }
 
+    public void print(Matrix x) {
+        print(x.toMarkdown(Map.of("class", "table")));
+    }
+
+    public void println(Matrix x) {
+        println(x.toMarkdown(Map.of("class", "table")));
     }
 
     @Override
