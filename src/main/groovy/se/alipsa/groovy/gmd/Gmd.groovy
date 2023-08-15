@@ -65,7 +65,7 @@ class Gmd {
      */
     String gmdToMd(String text, Map bindings) throws GmdException {
         try {
-            def template = engine.createTemplate(GmdPreprocessor.processCodeBlocks(text))
+            def template = engine.createTemplate(GmdPreprocessor.processCodeBlocks(text, bindings))
             return String.valueOf(template.make(bindings)).replace("\r\n", "\n")
         } catch (CompilationFailedException | ClassNotFoundException | IOException e) {
             throw new GmdException("Failed to process gmd", e)

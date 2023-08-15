@@ -27,11 +27,14 @@ class GmdPreprocessor {
      * @param text the gmd text to process
      * @return the gmd text with code blocks "expanded"
      */
-    static String processCodeBlocks(String text) throws GmdException {
+    static String processCodeBlocks(String text, Map bindings = [:]) throws GmdException {
         def classLoader = new GroovyClassLoader();
         def engine = new GroovyScriptEngineImpl(classLoader)
         try (Printer out = new Printer()) {
             engine.put("out", out)
+            bindings.each {
+                engine.put(it.key, it.value)
+            }
             boolean shouldBeProcessed = false
             boolean codeBlockStart = false
             boolean codeBlockEnd = false
