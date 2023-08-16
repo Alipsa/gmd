@@ -145,6 +145,46 @@ class GmdTest {
   }
 
   @Test
+  void testMatrixTable() {
+    def text = '''
+    # Applications on `=the_date`
+    ```{groovy echo=false}
+    // @Grab('se.alipsa.groovy:matrix:1.1.2')
+    
+    import static se.alipsa.groovy.matrix.ListConverter.*
+      
+    import se.alipsa.groovy.matrix.Matrix
+    import java.time.LocalDate
+    out.print(Matrix.create(
+      emp_id: 1..5,
+      emp_name: ["Rick","Dan","Michelle","Ryan","Gary"],
+      salary: [623.3,515.2,611.0,729.0,843.25],
+      start_date: toLocalDates("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11", "2015-03-27"),
+      [int, String, Number, LocalDate]
+    ))
+    ```
+    '''.stripIndent()
+
+    Gmd gmd = new Gmd();
+
+    def html = gmd.gmdToHtml(text, [the_date: '2023-08-16'])
+    assertEquals('''        <h1>Applications on 2023-08-16</h1>
+        <table class="table">
+        <thead>
+        <tr><th align="right">emp_id</th><th>emp_name</th><th align="right">salary</th><th>start_date</th></tr>
+        </thead>
+        <tbody>
+        <tr><td align="right">1</td><td>Rick</td><td align="right">623.3</td><td>2012-01-01</td></tr>
+        <tr><td align="right">2</td><td>Dan</td><td align="right">515.2</td><td>2013-09-23</td></tr>
+        <tr><td align="right">3</td><td>Michelle</td><td align="right">611.0</td><td>2014-11-15</td></tr>
+        <tr><td align="right">4</td><td>Ryan</td><td align="right">729.0</td><td>2014-05-11</td></tr>
+        <tr><td align="right">5</td><td>Gary</td><td align="right">843.25</td><td>2015-03-27</td></tr>
+        </tbody>
+        </table>
+        '''.stripIndent(), html)
+  }
+
+  @Test
   void gmdToHtmlDoc() {
     String text = """\
       # Test

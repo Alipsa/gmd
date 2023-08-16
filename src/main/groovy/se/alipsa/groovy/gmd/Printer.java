@@ -171,12 +171,20 @@ public class Printer extends PrintWriter {
         println(String.valueOf(x));
     }
 
+    public void print(Matrix x, Map<String,String> tableAttributes) {
+        print(x.toMarkdown(tableAttributes));
+    }
+
+    public void println(Matrix x, Map<String,String> tableAttributes) {
+        println(x.toMarkdown(tableAttributes));
+    }
+
     public void print(Matrix x) {
-        print(x.toMarkdown(Map.of("class", "table")));
+        print(x, Map.of("class", "table"));
     }
 
     public void println(Matrix x) {
-        println(x.toMarkdown(Map.of("class", "table")));
+        println(x, Map.of("class", "table"));
     }
 
     @Override
