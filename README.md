@@ -262,6 +262,7 @@ Release history
 
 ### v1.0.8, in progress
 - upgrade dependencies (require java 17, bootstrap 5.3.1, etc.)
+- add support for Matrix (se.alipsa.groovy.matrix) data
 
 ### v1.0.7, 2023-02-24
 - Fix bug in code md snippets so that \```{groovy} now becomes \```groovy
