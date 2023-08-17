@@ -1,7 +1,5 @@
 package test.alipsa.groovy.gmd
 
-import se.alipsa.groovy.gmd.GmdPreprocessor
-
 import static org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import se.alipsa.groovy.gmd.Gmd
