@@ -27,6 +27,7 @@ dependencies {
     def openhtmltopdfVersion = "[1.0.10, )"
     def log4jVersion = "[2.18.0, )"
     def groovyVersion = "4.0.13"
+    def javaFxVersion = '20'
     // By using compileOnly instead of implementation, the jar will not be available at runtime
     // and hence users can use whatever compatible version of Groovy that they want
     compileOnly "org.apache.groovy:groovy:${groovyVersion}"
@@ -58,6 +59,9 @@ dependencies {
     testImplementation "org.apache.groovy:groovy-templates:${groovyVersion}"
     testImplementation "org.apache.groovy:groovy-jsr223:${groovyVersion}"
     testImplementation 'org.apache.commons:commons-lang3:3.13.0'
+
+    testImplementation "org.openjfx:javafx-controls:${javaFxVersion}"
+    testImplementation "org.openjfx:javafx-swing:${javaFxVersion}"
 }
 
 test {

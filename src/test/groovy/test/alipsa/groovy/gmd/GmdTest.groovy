@@ -287,4 +287,32 @@ class GmdTest {
     assertEquals("""<p>X = 5</p>
         """.stripIndent(), gmd.gmdToHtml(text))
   }
+
+  @Test
+  void testChart() {
+    def text = '''
+# Employees
+
+```{groovy}
+import static se.alipsa.groovy.matrix.ListConverter.*
+
+import se.alipsa.groovy.matrix.*
+import se.alipsa.groovy.charts.*
+import java.time.LocalDate 
+
+def empData = Matrix.create(
+            emp_id: 1..5,
+            emp_name: ["Rick","Dan","Michelle","Ryan","Gary"],
+            salary: [623.3,515.2,611.0,729.0,843.25],
+            start_date: toLocalDates("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11", "2015-03-27"),
+            [int, String, Number, LocalDate]
+    )
+BarChart chart = BarChart.createVertical("Salaries", empData, "emp_name", ChartType.NONE, "salary")
+out.println(chart)
+```
+'''
+    Gmd gmd = new Gmd()
+    String md = gmd.gmdToMd(text)
+    println md
+  }
 }
