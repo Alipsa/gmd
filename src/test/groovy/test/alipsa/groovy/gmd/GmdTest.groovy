@@ -7,35 +7,40 @@ import se.alipsa.groovy.gmd.Gmd
 class GmdTest {
 
   def text = """\
-        <% 
+        # Hello
+        ```{groovy echo=false}
         import java.time.LocalDate
         import java.time.format.TextStyle
         import java.util.Locale
         
-        def now = LocalDate.parse("2022-07-23")
+        // note that we MUST not use def here but define the variable globally
+        now = LocalDate.parse("2022-07-23")
         
         def dayName(theDate) {
           return theDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault())
         }
-        %>
-        # Hello
+        ```
         
-        Today (<%= dayName(now) %>) is <%= now %>.
+        Today (`= dayName(now)`) is `= now `.
         
         The weather in next 3 days will be:
-        <% def weather = [ "Sunny", "Rainy", "Cloudy", "Windy" ]
+        ```{groovy echo=false}
+          def weather = [ "Sunny", "Rainy", "Cloudy", "Windy" ]
           for (i = 1; i < 4; i++) {
             def day = now.plusDays(i)
             out.println "- " + dayName(day) + ": " + weather.get(i-1)
-          } %>
+          }
+        ```
+        
         Now, that's something to look forward to!
+        
         """.stripIndent()
 
   @Test
   void gmdToMd() {
     def gmd = new Gmd()
     def md = gmd.gmdToMd(text)
-    assertEquals("""
+    assertEquals("""\
         # Hello
 
         Today (Saturday) is 2022-07-23.
@@ -85,7 +90,7 @@ class GmdTest {
 
   @Test
   void gmdToMdWithParameter() {
-    def text = '## Hello ${name}!'
+    def text = '## Hello `=name`!'
     def gmd = new Gmd()
     def md = gmd.gmdToMd(text, [name: "Per"])
     assertEquals("## Hello Per!", md)
@@ -93,7 +98,7 @@ class GmdTest {
 
   @Test
   void gmdToHtmlWithParameter() {
-    def text = '## Hello ${name}!'
+    def text = '## Hello `=name`!'
     def gmd = new Gmd()
     def html = gmd.gmdToHtml(text, [name: "Per"])
     assertEquals("<h2>Hello Per!</h2>\n", html)
@@ -101,7 +106,7 @@ class GmdTest {
 
   @Test
   void gmdToPdfWithParameter() {
-    def text = '## Hello ${name}!'
+    def text = '## Hello `=name`!'
     def gmd = new Gmd()
     def html = gmd.gmdToHtmlDoc(text, [name: "Per"])
     def pdfFile = File.createTempFile("weather", ".pdf")
@@ -186,12 +191,12 @@ class GmdTest {
   void gmdToHtmlDoc() {
     String text = """\
       # Test
-      <%
+      ```{groovy echo=false}
       def a = 3
       for (i in 1..a) {
         out.println("Hello \${i}")  
       }
-      %>
+      ```
       
       - first 
       - second
@@ -204,8 +209,9 @@ class GmdTest {
       X = ∑(√2π + ∛3)  
     """.stripIndent()
     def gmd = new Gmd()
+
     def html = gmd.gmdToHtmlDoc(text)
-    assertTrue html.contains("""\
+    assertTrue (html.contains("""\
       <h1>Test</h1>
       <p>Hello 1<br />
       Hello 2<br />
@@ -220,7 +226,7 @@ class GmdTest {
       <p>X = ∑(√2π + ∛3)<br />
       X = ∑(√2π + ∛3)</p>
       
-      </body>""".stripIndent())
+      </body>""".stripIndent()), html)
     assertTrue(html.startsWith("""\
       <!DOCTYPE html PUBLIC
       "-//OPENHTMLTOPDF//MATH XHTML Character Entities With MathML 1.0//EN" "">
@@ -313,6 +319,7 @@ out.println(chart)
 '''
     Gmd gmd = new Gmd()
     String md = gmd.gmdToMd(text)
-    println md
+    assertTrue(md.contains('# Employees'))
+    assertTrue(md.contains("![''](data:image/png;base64,"))
   }
 }

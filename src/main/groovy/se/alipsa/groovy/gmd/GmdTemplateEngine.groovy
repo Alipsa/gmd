@@ -6,7 +6,7 @@ import javax.script.ScriptContext
 import javax.script.ScriptException
 import java.util.regex.Matcher
 
-class GmdPreprocessor {
+class GmdTemplateEngine {
 
 
     /**
@@ -110,14 +110,16 @@ class GmdPreprocessor {
      * just the part to be evaluated (aVal )
      */
     static String expandInlineVars(String line, GroovyScriptEngineImpl engine) throws GmdException {
+        String expression = ''
+        String val = ''
         try {
             Matcher matcher = line =~ /`=(.+?)`/
             String newLine = line
             if (matcher.find()) {
                 List<List<String>> matches = matcher.findAll()
                 matches.each { expVal ->
-                    String expression = expVal.get(0)
-                    String val = expVal.get(1)
+                    expression = expVal.get(0)
+                    val = expVal.get(1)
                     String evaluatedVal = String.valueOf(engine.eval(val))
                     newLine = newLine.replace(expression, evaluatedVal)
                 }
@@ -126,7 +128,7 @@ class GmdPreprocessor {
                 return line
             }
         } catch (ScriptException | RuntimeException e) {
-            throw new GmdException("Failed to expand inline variables (`=)", e)
+            throw new GmdException("Failed to expand inline variable (`=${val})", e)
         }
     }
 

@@ -1,15 +1,11 @@
 # gmd - Groovy Markdown
 
 Groovy markdown is basically markdown with some groovy code for dynamic rendering.
-It is based on the Groovy [StreamingTemplateEngine](https://groovy-lang.org/templating.html) and the [Flexmark
+It is based on the GmdTemplateEngine and the [Flexmark
 Markdown package](https://github.com/vsch/flexmark-java).
 
 A gmd file (or text) is markdown with groovy code in codeblocks starting with \```{groovy} and ending with \```
-(similar to rmd and mdr files). An alternative syntax where code is enclosed between <% %> bracket 
-(or <%= %> for direct value output) or is also supported.
-
-There are some advantages with the codeblock (\```{groovy}) approach over the scriptlet (<% %>) one, 
-mainly that variables and functions are "remembered" and can be used further down in the gmd document.
+(similar to rmd and mdr files) and \`= \` for direct value output.
 
 Here is an example:
 
@@ -64,46 +60,6 @@ Which will result in
 123 + 234 = 357
 ```
 
-Here is a simple example of using scriptlets (<% %>):
-
-```jsp
-<% 
-import java.time.LocalDate
-import java.time.format.TextStyle
-import java.util.Locale
-
-def now = LocalDate.parse("2022-07-23")
-
-def dayName(theDate) {
-  return theDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault())
-}
-%>
-# Hello
-Today (<%= dayName(now) %>) is <%= now %>.
-
-The weather in next couple of days will be:
-<%
-  def weather = [ "Sunny", "Rainy", "Cloudy", "Windy" ]
-  for (i in 1..3) {
-    def day = now.plusDays(i)
-    Collections.shuffle weather
-    out.println("- " + dayName(day) + ": " + weather.first())
-  }
-%>
-```
-
-Which will generate the following markdown:
-```markdown
-# Hello
-Today (Saturday) is 2022-07-23.
-
-The weather in next couple of days will be:
-- Sunday: Cloudy
-- Monday: Cloudy
-- Tuesday: Sunny
-
-```
-
 This kind of Markdown text can then be transformed to html and pdf using the Gmd class e.g:
 ```groovy
 def gmd = new se.alipsa.groovy.gmd.Gmd()
@@ -117,7 +73,7 @@ gmd.htmlToPdf(html, pdfFile)
 
 If you want to pass parameters to be used in the gmd text/file you can do that like this:
 ```groovy
-def text = 'Hello ${name}!'
+def text = 'Hello `=name`!'
 def gmd = new se.alipsa.groovy.gmd.Gmd()
 def md = gmd.gmdToMd(text, [name: "Per"])
 
@@ -209,17 +165,19 @@ String toString(Document doc) throws TransformerException {
   transformer.transform(new DOMSource(doc), new StreamResult(sw));
   return sw.toString();
 }
+```
+Example usage:
 
-// Example usage:
+```groovy
 def text = """
 # Test
 
-<%
+&grave;&grave;&grave;{groovy echo=false}
 def a = 3
 for (i in 1..a) {
   out.println('Hello ' + i)  
 }
-%>
+&grave;&grave;&grave;
 
 - first 
 - second
@@ -237,7 +195,6 @@ def html = gmd.gmdToHtmlDoc(text)
 // create a pdf file from the html
 def pdfFile = File.createTempFile("test", ".pdf")
 saveHtmlAsPdf(html, pdfFile, gmd)
-
 ```
 Alternatives to using JavaFx WebView might be [Web-K](https://github.com/Earnix/Web-K) or [J2V8](https://github.com/eclipsesource/J2V8)
 , but I have not tested any of those.
@@ -246,16 +203,47 @@ The library, which requires Java 17 or later, is available from maven central:
 
 Gradle: 
 ```groovy
+org.gradle.internal.os.OperatingSystem os = org.gradle.internal.os.OperatingSystem.current()
+def qualifier = 'unknown'
+if (os.isLinux()) {
+  qualifier='linux'
+} else if (os.isWindows()) {
+  qualifier = 'win'
+} else if (os.isMacOsX()) {
+  qualifier = 'mac-aarch64'
+}
+def javaFxVersion = '20'
 implementation "se.alipsa.groovy:gmd:1.0.7"
+implementation "org.openjfx:javafx-base:${javaFxVersion}:${qualifier}"
+implementation "org.openjfx:javafx-graphics:${javaFxVersion}:${qualifier}"
+implementation "org.openjfx:javafx-controls:${javaFxVersion}:${qualifier}"
+implementation "org.openjfx:javafx-swing:${javaFxVersion}:${qualifier}"
 ```
 
 Maven:
 ```xml
-<dependency>
-    <groupId>se.alipsa.groovy</groupId>
-    <artifactId>gmd</artifactId>
-    <version>1.0.7</version>
-</dependency>
+<build>
+  <properties>
+      <javaFxVersion>20</javaFxVersion>
+  </properties>
+  <dependencies>  
+    <dependency>
+      <groupId>se.alipsa.groovy</groupId>
+      <artifactId>gmd</artifactId>
+      <version>1.0.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>${javaFxVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-swing</artifactId>
+      <version>${javaFxVersion}</version>
+    </dependency>
+  </dependencies>
+</build>
 ```
 
 Release history
@@ -263,6 +251,9 @@ Release history
 ### v1.0.8, in progress
 - upgrade dependencies (require java 17, bootstrap 5.3.1, etc.)
 - add support for Matrix (se.alipsa.groovy.matrix) data
+- add support for Matrix charts which requires java fx
+- Remove the use of the SimpleTemplateEngine due to the size limitation
+  as a consequence, scriptlet syntax is no longer supported
 
 ### v1.0.7, 2023-02-24
 - Fix bug in code md snippets so that \```{groovy} now becomes \```groovy

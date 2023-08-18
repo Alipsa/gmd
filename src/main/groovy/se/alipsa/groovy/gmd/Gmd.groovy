@@ -28,14 +28,14 @@ import java.nio.file.Files
  * Key class for this Groovy Markdown implementation
  */
 class Gmd {
-    final SimpleTemplateEngine engine
+    //final SimpleTemplateEngine engine
     final Parser parser
     final HtmlRenderer renderer
     final DataHolder pdfOptions
 
     Gmd() {
         XRLog.setLoggerImpl(new Log4jXRLogger());
-        engine = new SimpleTemplateEngine()
+        //engine = new SimpleTemplateEngine()
         MutableDataSet options = new MutableDataSet()
 
         // add extensions
@@ -65,8 +65,9 @@ class Gmd {
      */
     String gmdToMd(String text, Map bindings) throws GmdException {
         try {
-            def template = engine.createTemplate(GmdPreprocessor.processCodeBlocks(text, bindings))
-            return String.valueOf(template.make(bindings)).replace("\r\n", "\n")
+            //def template = engine.createTemplate(GmdPreprocessor.processCodeBlocks(text, bindings))
+            //return String.valueOf(template.make(bindings)).replace("\r\n", "\n")
+            return GmdTemplateEngine.processCodeBlocks(text, bindings)
         } catch (CompilationFailedException | ClassNotFoundException | IOException e) {
             throw new GmdException("Failed to process gmd", e)
         }
@@ -78,9 +79,12 @@ class Gmd {
      * @return a markdown text document
      */
     String gmdToMd(String text) throws GmdException {
-        def updatedText = GmdPreprocessor.processCodeBlocks(text)
+        return GmdTemplateEngine.processCodeBlocks(text)
+        /*
+        def updatedText = GmdTemplateEngine.processCodeBlocks(text)
         def template = engine.createTemplate(updatedText)
         return String.valueOf(template.make()).replace("\r\n", "\n")
+        */
     }
 
     String mdToHtml(String markdown) throws GmdException {

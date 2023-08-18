@@ -4,9 +4,9 @@ import org.apache.commons.lang3.StringUtils
 
 import static org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import se.alipsa.groovy.gmd.GmdPreprocessor
+import se.alipsa.groovy.gmd.GmdTemplateEngine
 
-class GmdPreprocessorTest {
+class GmdTemplateEngineTest {
 
     @Test
     void testEcho() {
@@ -18,7 +18,7 @@ Before
     out.println('Hello World')
 ```
 After code block"""
-        String processed = GmdPreprocessor.processCodeBlocks(text)
+        String processed = GmdTemplateEngine.processCodeBlocks(text)
         String expected = """
 Before
 ```groovy
@@ -50,7 +50,7 @@ After code block"""
         assertEquals("""
             Before
 Hello World
-            After""", GmdPreprocessor.processCodeBlocks(text))
+            After""", GmdTemplateEngine.processCodeBlocks(text))
     }
 
     @Test
@@ -74,7 +74,7 @@ Hello World
 ```
 Hello World
             After
-        """, GmdPreprocessor.processCodeBlocks(text))
+        """, GmdTemplateEngine.processCodeBlocks(text))
     }
 
     @Test
@@ -87,7 +87,7 @@ Hello World
         """
         assertEquals("""
         123 + 234 = 357
-        """, GmdPreprocessor.processCodeBlocks(text))
+        """, GmdTemplateEngine.processCodeBlocks(text))
 
         text = """
         ```{groovy echo=false}
@@ -99,7 +99,7 @@ Hello World
 
         assertEquals("""
         X = 5
-        """.stripIndent(), GmdPreprocessor.processCodeBlocks(text))
+        """.stripIndent(), GmdTemplateEngine.processCodeBlocks(text))
 
     }
 }
