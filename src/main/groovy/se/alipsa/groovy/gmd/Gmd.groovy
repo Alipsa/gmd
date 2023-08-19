@@ -19,7 +19,6 @@ import com.vladsch.flexmark.profile.pegdown.PegdownOptionsAdapter
 import com.vladsch.flexmark.util.ast.Node
 import com.vladsch.flexmark.util.data.DataHolder
 import com.vladsch.flexmark.util.data.MutableDataSet
-import groovy.text.SimpleTemplateEngine
 import org.w3c.dom.Document
 
 import java.nio.file.Files
@@ -50,11 +49,12 @@ class Gmd {
         renderer = HtmlRenderer.builder(options)
                 .build();
 
+
         pdfOptions = PegdownOptionsAdapter.flexmarkOptions(
                 Extensions.ALL & ~(Extensions.ANCHORLINKS | Extensions.EXTANCHORLINKS_WRAP)
                 , TocExtension.create()).toMutable()
                 .set(TocExtension.LIST_CLASS, PdfConverterExtension.DEFAULT_TOC_LIST_CLASS)
-                .toImmutable();
+                .toImmutable()
     }
 
     /**

@@ -254,6 +254,7 @@ Release history
 - add support for Matrix charts which requires java fx
 - Remove the use of the SimpleTemplateEngine due to the size limitation
   as a consequence, scriptlet syntax is no longer supported
+- Add Html class for convenient groovy -> html generation
 
 ### v1.0.7, 2023-02-24
 - Fix bug in code md snippets so that \```{groovy} now becomes \```groovy
