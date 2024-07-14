@@ -22,7 +22,6 @@ class Html {
     return this
   }
 
-
   Html add(Chart chart, double width = 800, double height = 600, String alt = '', Map<String, String> htmlattr = [:]) {
     out.println(chartToHtml(chart, width, height, alt, htmlattr))
     return this
@@ -31,7 +30,6 @@ class Html {
   String toString() {
     return out.toString()
   }
-
 
   private static String chartToHtml(Chart x, double width, double height, String alt, Map<String, String> attributes) {
     StringBuilder attr = new StringBuilder()
