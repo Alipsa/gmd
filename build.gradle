@@ -26,7 +26,7 @@ dependencies {
     def junitVersion = "[5.10.0, )"
     def openhtmltopdfVersion = "1.0.10"
     def log4jVersion = "[2.18.0, )"
-    def groovyVersion = "4.0.22"
+    def groovyVersion = "4.0.23"
     def javaFxVersion = '22.0.1'
     org.gradle.internal.os.OperatingSystem os = org.gradle.internal.os.OperatingSystem.current()
     // check https://repo1.maven.org/maven2/org/openjfx/javafx/20/javafx-20.pom for the platform property
@@ -59,7 +59,7 @@ dependencies {
     implementation "com.openhtmltopdf:openhtmltopdf-svg-support:${openhtmltopdfVersion}"
     // Remember to update HtmlDecorator.BOOTSTRAP_CSS_PATH if the dependency changes
     implementation 'org.webjars:bootstrap:5.3.3'
-    implementation 'se.alipsa.groovy:matrix-core:1.2.4'
+    implementation 'se.alipsa.groovy:matrix-core:2.0.0'
     implementation('se.alipsa.groovy:matrix-charts:1.0.0-SNAPSHOT') {
         exclude group: 'org.apache.pdfbox', module: 'pdfbox'
     }
@@ -82,7 +82,7 @@ dependencies {
     testImplementation "org.apache.groovy:groovy:${groovyVersion}"
     testImplementation "org.apache.groovy:groovy-templates:${groovyVersion}"
     testImplementation "org.apache.groovy:groovy-jsr223:${groovyVersion}"
-    testImplementation 'org.apache.commons:commons-lang3:3.14.0'
+    testImplementation 'org.apache.commons:commons-lang3:3.17.0'
 
     // Qualifier must be explicit on linux for some reason, works without qualifiers on mac
     testImplementation "org.openjfx:javafx-base:${javaFxVersion}:${qualifier}"

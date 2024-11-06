@@ -152,19 +152,19 @@ class GmdTest {
     def text = '''
     # Applications on `=the_date`
     ```{groovy echo=false}
-    // @Grab('se.alipsa.groovy:matrix:1.1.2')
+    // @Grab('se.alipsa.groovy:matrix:2.0.0')
     
     import static se.alipsa.groovy.matrix.ListConverter.*
       
     import se.alipsa.groovy.matrix.Matrix
     import java.time.LocalDate
-    out.print(new Matrix(
-      emp_id: 1..5,
-      emp_name: ["Rick","Dan","Michelle","Ryan","Gary"],
-      salary: [623.3,515.2,611.0,729.0,843.25],
-      start_date: toLocalDates("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11", "2015-03-27"),
-      [int, String, Number, LocalDate]
-    ))
+    out.print(Matrix.builder().data(
+        emp_id: 1..5,
+        emp_name: ["Rick","Dan","Michelle","Ryan","Gary"],
+        salary: [623.3,515.2,611.0,729.0,843.25],
+        start_date: toLocalDates("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11", "2015-03-27"))
+      .types(int, String, Number, LocalDate).build()
+    )
     ```
     '''.stripIndent()
 
@@ -306,13 +306,13 @@ import se.alipsa.groovy.matrix.*
 import se.alipsa.groovy.charts.*
 import java.time.LocalDate 
 
-def empData = new Matrix(
+def empData = Matrix.builder().data(
             emp_id: 1..5,
             emp_name: ["Rick","Dan","Michelle","Ryan","Gary"],
             salary: [623.3,515.2,611.0,729.0,843.25],
-            start_date: toLocalDates("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11", "2015-03-27"),
-            [int, String, Number, LocalDate]
-    )
+            start_date: toLocalDates("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11", "2015-03-27"))
+            .types(int, String, Number, LocalDate)
+            .build()
 BarChart chart = BarChart.createVertical("Salaries", empData, "emp_name", ChartType.BASIC, "salary")
 out.println(chart)
 ```

@@ -2,7 +2,6 @@ package se.alipsa.groovy.gmd
 
 import org.codehaus.groovy.jsr223.GroovyScriptEngineImpl
 
-import javax.script.ScriptContext
 import javax.script.ScriptException
 import java.util.regex.Matcher
 
