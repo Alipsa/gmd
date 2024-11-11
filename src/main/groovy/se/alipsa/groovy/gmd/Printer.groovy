@@ -28,6 +28,7 @@ class Printer extends PrintWriter {
     }
 
     void print(Matrix x, Map<String,String> tableAttributes) {
+        // todo: Figure out how to get the Table extension to work or add Matrix.toHtml(tableAttributes) as a work around
         print(x.toMarkdown(tableAttributes))
     }
 

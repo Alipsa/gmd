@@ -185,6 +185,28 @@ class GmdTest {
         </tbody>
         </table>
         '''.stripIndent(), html)
+
+    text = '''
+    ```{groovy}
+    import static se.alipsa.groovy.matrix.ListConverter.*
+
+    import se.alipsa.groovy.matrix.*
+    import se.alipsa.groovy.charts.*
+    import java.time.LocalDate
+
+    def empData = Matrix.builder().data(
+        emp_id: 1..5,
+        emp_name: ["Rick","Dan","Michelle","Ryan","Gary"],
+        salary: [623.3,515.2,611.0,729.0,843.25],
+        start_date: toLocalDates("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11", "2015-03-27"))
+        .types([int, String, Number, LocalDate])
+        .build()
+    BarChart chart = BarChart.createVertical("Salaries", empData, "emp_name", ChartType.BASIC, "salary")
+    out.println(chart)
+    ```
+    '''
+    html = gmd.gmdToHtml(text)
+    println(html)
   }
 
   @Test
