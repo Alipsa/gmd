@@ -45,15 +45,10 @@ dependencies {
     compileOnly "org.apache.groovy:groovy-templates:${groovyVersion}"
     compileOnly "org.apache.groovy:groovy-jsr223:${groovyVersion}"
     implementation "org.apache.logging.log4j:log4j-api:${log4jVersion}"
-    /*
-    implementation("com.vladsch.flexmark:flexmark-all:0.64.8") {
-        constraints {
-            implementation "com.ibm.icu:icu4j:75.1"
-            because "CWE-190: Integer Overflow or Wraparound: com.openhtmltopdf:openhtmltopdf-rtl-support contains com.ibm.icu:icu4j:59.1"
-        }
-    }*/
     implementation "org.commonmark:commonmark:0.24.0"
     implementation "org.commonmark:commonmark-ext-gfm-tables:0.24.0"
+    // TODO: Consider using https://github.com/flyingsaucerproject/flyingsaucer instead as it is more actively maintained than https://github.com/openhtmltopdf/openhtmltopdf
+    // Journo uses flying saucer...
     implementation("io.github.openhtmltopdf:openhtmltopdf-core:${openhtmltopdfVersion}")
     implementation("io.github.openhtmltopdf:openhtmltopdf-pdfbox:${openhtmltopdfVersion}")
     implementation("io.github.openhtmltopdf:openhtmltopdf-mathml-support:${openhtmltopdfVersion}")
