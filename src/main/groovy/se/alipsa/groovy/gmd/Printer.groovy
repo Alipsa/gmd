@@ -28,11 +28,12 @@ class Printer extends PrintWriter {
     }
 
     void print(Matrix x, Map<String,String> tableAttributes) {
-        print(x.toMarkdown(tableAttributes))
+        // todo: The Table extension does not support custom attributes so we use Matrix.toHtml(tableAttributes) as a work around
+        print(x.toHtml(tableAttributes))
     }
 
     void println(Matrix x, Map<String,String> tableAttributes) {
-        println(x.toMarkdown(tableAttributes))
+        println(x.toHtml(tableAttributes))
     }
 
     void print(Matrix x) {

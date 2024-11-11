@@ -152,39 +152,91 @@ class GmdTest {
     def text = '''
     # Applications on `=the_date`
     ```{groovy echo=false}
-    // @Grab('se.alipsa.groovy:matrix:1.1.2')
+    // @Grab('se.alipsa.groovy:matrix:2.0.0')
     
     import static se.alipsa.groovy.matrix.ListConverter.*
       
     import se.alipsa.groovy.matrix.Matrix
     import java.time.LocalDate
-    out.print(new Matrix(
-      emp_id: 1..5,
-      emp_name: ["Rick","Dan","Michelle","Ryan","Gary"],
-      salary: [623.3,515.2,611.0,729.0,843.25],
-      start_date: toLocalDates("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11", "2015-03-27"),
-      [int, String, Number, LocalDate]
-    ))
+    out.print(Matrix.builder().data(
+        emp_id: 1..5,
+        emp_name: ["Rick","Dan","Michelle","Ryan","Gary"],
+        salary: [623.3,515.2,611.0,729.0,843.25],
+        start_date: toLocalDates("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11", "2015-03-27"))
+      .types(int, String, Number, LocalDate).build()
+    )
     ```
     '''.stripIndent()
 
     Gmd gmd = new Gmd();
 
     def html = gmd.gmdToHtml(text, [the_date: '2023-08-16'])
-    assertEquals('''        <h1>Applications on 2023-08-16</h1>
-        <table class="table">
+    assertEquals('''      <h1>Applications on 2023-08-16</h1>
+      <table class="table">
         <thead>
-        <tr><th align="right">emp_id</th><th>emp_name</th><th align="right">salary</th><th>start_date</th></tr>
+          <tr>
+            <th class='emp_id Integer' style='text-align: right'>emp_id</th>
+            <th class='emp_name String'>emp_name</th>
+            <th class='salary Number' style='text-align: right'>salary</th>
+            <th class='start_date LocalDate'>start_date</th>
+          </tr>
         </thead>
         <tbody>
-        <tr><td align="right">1</td><td>Rick</td><td align="right">623.3</td><td>2012-01-01</td></tr>
-        <tr><td align="right">2</td><td>Dan</td><td align="right">515.2</td><td>2013-09-23</td></tr>
-        <tr><td align="right">3</td><td>Michelle</td><td align="right">611.0</td><td>2014-11-15</td></tr>
-        <tr><td align="right">4</td><td>Ryan</td><td align="right">729.0</td><td>2014-05-11</td></tr>
-        <tr><td align="right">5</td><td>Gary</td><td align="right">843.25</td><td>2015-03-27</td></tr>
-        </tbody>
-        </table>
+          <tr>
+            <td class='emp_id Integer' style='text-align: right'>1</td>
+            <td class='emp_name String'>Rick</td>
+            <td class='salary Number' style='text-align: right'>623.3</td>
+            <td class='start_date LocalDate'>2012-01-01</td>
+          </tr>
+          <tr>
+            <td class='emp_id Integer' style='text-align: right'>2</td>
+            <td class='emp_name String'>Dan</td>
+            <td class='salary Number' style='text-align: right'>515.2</td>
+            <td class='start_date LocalDate'>2013-09-23</td>
+          </tr>
+          <tr>
+            <td class='emp_id Integer' style='text-align: right'>3</td>
+            <td class='emp_name String'>Michelle</td>
+            <td class='salary Number' style='text-align: right'>611.0</td>
+            <td class='start_date LocalDate'>2014-11-15</td>
+          </tr>
+          <tr>
+            <td class='emp_id Integer' style='text-align: right'>4</td>
+            <td class='emp_name String'>Ryan</td>
+            <td class='salary Number' style='text-align: right'>729.0</td>
+            <td class='start_date LocalDate'>2014-05-11</td>
+          </tr>
+          <tr>
+            <td class='emp_id Integer' style='text-align: right'>5</td>
+            <td class='emp_name String'>Gary</td>
+            <td class='salary Number' style='text-align: right'>843.25</td>
+            <td class='start_date LocalDate'>2015-03-27</td>
+          </tr>
+        <tbody>
+      </table>
         '''.stripIndent(), html)
+
+    text = '''
+    ```{groovy}
+    import static se.alipsa.groovy.matrix.ListConverter.*
+
+    import se.alipsa.groovy.matrix.*
+    import se.alipsa.groovy.charts.*
+    import java.time.LocalDate
+
+    def empData = Matrix.builder().data(
+        emp_id: 1..5,
+        emp_name: ["Rick","Dan","Michelle","Ryan","Gary"],
+        salary: [623.3,515.2,611.0,729.0,843.25],
+        start_date: toLocalDates("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11", "2015-03-27"))
+        .types([int, String, Number, LocalDate])
+        .build()
+    BarChart chart = BarChart.createVertical("Salaries", empData, "emp_name", ChartType.BASIC, "salary")
+    out.println(chart)
+    ```
+    '''
+    html = gmd.gmdToHtml(text)
+    println(html)
   }
 
   @Test
@@ -306,13 +358,13 @@ import se.alipsa.groovy.matrix.*
 import se.alipsa.groovy.charts.*
 import java.time.LocalDate 
 
-def empData = new Matrix(
+def empData = Matrix.builder().data(
             emp_id: 1..5,
             emp_name: ["Rick","Dan","Michelle","Ryan","Gary"],
             salary: [623.3,515.2,611.0,729.0,843.25],
-            start_date: toLocalDates("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11", "2015-03-27"),
-            [int, String, Number, LocalDate]
-    )
+            start_date: toLocalDates("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11", "2015-03-27"))
+            .types(int, String, Number, LocalDate)
+            .build()
 BarChart chart = BarChart.createVertical("Salaries", empData, "emp_name", ChartType.BASIC, "salary")
 out.println(chart)
 ```

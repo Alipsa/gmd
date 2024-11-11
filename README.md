@@ -248,13 +248,15 @@ Maven:
 
 Release history
 
-### v1.0.8, in progress
-- upgrade dependencies (require java 17, bootstrap 5.3.1, etc.)
+### v1.1.0, in progress
+- upgrade dependencies (require java 17, bootstrap 5.3.3, etc.)
 - add support for Matrix (se.alipsa.groovy.matrix) data
-- add support for Matrix charts which requires java fx
+- add support for Matrix charts which (currently) requires java fx
 - Remove the use of the SimpleTemplateEngine due to the size limitation
   as a consequence, scriptlet syntax is no longer supported
 - Add Html class for convenient groovy -> html generation
+- Change from flexmark to commonmark
+- Change to active openhtmltopdf fork
 
 ### v1.0.7, 2023-02-24
 - Fix bug in code md snippets so that \```{groovy} now becomes \```groovy

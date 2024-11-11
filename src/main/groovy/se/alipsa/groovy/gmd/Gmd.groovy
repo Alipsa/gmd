@@ -1,24 +1,17 @@
 package se.alipsa.groovy.gmd
 
 import org.codehaus.groovy.control.CompilationFailedException
+import org.commonmark.renderer.html.HtmlRenderer
+import org.commonmark.parser.Parser
+import org.commonmark.ext.gfm.tables.TablesExtension
+import org.jsoup.Jsoup
+import org.jsoup.helper.W3CDom
 
 import static se.alipsa.groovy.gmd.HtmlDecorator.*
 import com.openhtmltopdf.mathmlsupport.MathMLDrawer
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer
 import com.openhtmltopdf.util.XRLog
-import com.vladsch.flexmark.ext.attributes.AttributesExtension
-import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension
-import com.vladsch.flexmark.ext.tables.TablesExtension
-import com.vladsch.flexmark.ext.toc.TocExtension
-import com.vladsch.flexmark.html.HtmlRenderer
-import com.vladsch.flexmark.parser.Parser
-import com.vladsch.flexmark.pdf.converter.PdfConverterExtension
-import com.vladsch.flexmark.profile.pegdown.Extensions
-import com.vladsch.flexmark.profile.pegdown.PegdownOptionsAdapter
-import com.vladsch.flexmark.util.ast.Node
-import com.vladsch.flexmark.util.data.DataHolder
-import com.vladsch.flexmark.util.data.MutableDataSet
 import org.w3c.dom.Document
 
 import java.nio.file.Files
@@ -30,11 +23,12 @@ class Gmd {
     //final SimpleTemplateEngine engine
     final Parser parser
     final HtmlRenderer renderer
-    final DataHolder pdfOptions
+    //final DataHolder pdfOptions
 
     Gmd() {
         XRLog.setLoggerImpl(new Log4jXRLogger());
         //engine = new SimpleTemplateEngine()
+        /*
         MutableDataSet options = new MutableDataSet()
 
         // add extensions
@@ -45,16 +39,20 @@ class Gmd {
         )
         // convert soft-breaks to hard breaks
         options.set(HtmlRenderer.SOFT_BREAK, "<br />\n")
-        parser = Parser.builder(options).build()
-        renderer = HtmlRenderer.builder(options)
-                .build();
+         */
+        parser = Parser.builder().build()
+        renderer = HtmlRenderer.builder()
+            .softbreak("<br />\n")
+            .extensions([TablesExtension.create()])
+            .build()
 
-
+        /*
         pdfOptions = PegdownOptionsAdapter.flexmarkOptions(
                 Extensions.ALL & ~(Extensions.ANCHORLINKS | Extensions.EXTANCHORLINKS_WRAP)
                 , TocExtension.create()).toMutable()
                 .set(TocExtension.LIST_CLASS, PdfConverterExtension.DEFAULT_TOC_LIST_CLASS)
                 .toImmutable()
+         */
     }
 
     /**
@@ -88,7 +86,7 @@ class Gmd {
     }
 
     String mdToHtml(String markdown) throws GmdException {
-        Node document = parser.parse(markdown)
+        org.commonmark.node.Node document = parser.parse(markdown)
         return renderer.render(document)
     }
 
@@ -119,7 +117,8 @@ class Gmd {
     void mdToPdf(String md, OutputStream target) throws GmdException {
         String html = mdToHtmlDoc(md)
         // TODO: "run" the html so that highlightJs can add appropriate style to the code sections
-        PdfConverterExtension.exportToPdf(target, html, "", pdfOptions)
+        //PdfConverterExtension.exportToPdf(target, html, "", pdfOptions)
+        htmlToPdf(html, target)
     }
 
     String gmdToHtml(String gmd) throws GmdException {
@@ -144,7 +143,10 @@ class Gmd {
 
     void htmlToPdf(String html, OutputStream target) {
         // TODO: "run" the html so that highlightJs can add appropriate style to the code sections
-        PdfConverterExtension.exportToPdf(target, html, "", pdfOptions)
+        //PdfConverterExtension.exportToPdf(target, html, "", pdfOptions)
+        var jsDoc = Jsoup.parse(html)
+        Document doc = new W3CDom().fromJsoup(jsDoc)
+        htmlToPdf(doc, target)
     }
 
     void htmlToPdf(String html, File file) throws IOException {
