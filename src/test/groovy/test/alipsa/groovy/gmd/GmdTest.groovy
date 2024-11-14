@@ -1,5 +1,10 @@
 package test.alipsa.groovy.gmd
 
+import org.apache.commons.io.IOUtils
+
+import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
+
 import static org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import se.alipsa.groovy.gmd.Gmd
@@ -373,5 +378,16 @@ out.println(chart)
     String md = gmd.gmdToMd(text)
     assertTrue(md.contains('# Employees'))
     assertTrue(md.contains("![''](data:image/png;base64,"))
+  }
+
+  @Test
+  void testMathmlToPDF() {
+    def html = IOUtils.toString(this.class.getResource('/mathml.html'), StandardCharsets.UTF_8)
+    Gmd gmd = new Gmd()
+    def pdfFile = new File("target/mathml.pdf")
+    gmd.htmlToPdf(html, pdfFile)
+    assertTrue(pdfFile.exists())
+    println("Wrote $pdfFile.absolutePath")
+    //pdfFile.delete()
   }
 }

@@ -28,7 +28,7 @@ class Printer extends PrintWriter {
     }
 
     void print(Matrix x, Map<String,String> tableAttributes) {
-        // todo: The Table extension does not support custom attributes so we use Matrix.toHtml(tableAttributes) as a work around
+        // The Table extension in commonmark does not support custom attributes so we use toHtml as a work around
         print(x.toHtml(tableAttributes))
     }
 

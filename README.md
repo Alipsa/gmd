@@ -257,6 +257,7 @@ Release history
 - Add Html class for convenient groovy -> html generation
 - Change from flexmark to commonmark
 - Change to active openhtmltopdf fork
+- Use Matrix toHtml implementation to render tables instead of the OOTB GFM support
 
 ### v1.0.7, 2023-02-24
 - Fix bug in code md snippets so that \```{groovy} now becomes \```groovy
