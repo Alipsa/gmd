@@ -241,7 +241,8 @@ class GmdTest {
     ```
     '''
     html = gmd.gmdToHtml(text)
-    println(html)
+    assertTrue(html.contains('BarChart chart = BarChart.createVertical('), 'Should contain code content')
+    assertTrue(html.contains('<p><img src="data:image/png;base64,'), 'Should contain image content')
   }
 
   @Test
