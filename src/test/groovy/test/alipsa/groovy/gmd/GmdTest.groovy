@@ -385,10 +385,9 @@ out.println(chart)
   void testMathmlToPDF() {
     def html = IOUtils.toString(this.class.getResource('/mathml.html'), StandardCharsets.UTF_8)
     Gmd gmd = new Gmd()
-    def pdfFile = new File("target/mathml.pdf")
+    def pdfFile = new File("build/test-results/mathml.pdf")
     gmd.htmlToPdf(html, pdfFile)
     assertTrue(pdfFile.exists())
     println("Wrote $pdfFile.absolutePath")
-    //pdfFile.delete()
   }
 }

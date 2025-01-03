@@ -24,10 +24,10 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 dependencies {
-    def junitVersion = "5.10.3"
-    def openhtmltopdfVersion = "1.1.22"
+    def junitVersion = "5.11.4"
+    def openhtmltopdfVersion = "1.1.24"
     def log4jVersion = "[2.18.0, )"
-    def groovyVersion = "4.0.23"
+    def groovyVersion = "4.0.24"
     def javaFxVersion = '22.0.2'
     org.gradle.internal.os.OperatingSystem os = org.gradle.internal.os.OperatingSystem.current()
     // check https://repo1.maven.org/maven2/org/openjfx/javafx/20/javafx-20.pom for the platform property
@@ -53,10 +53,10 @@ dependencies {
     implementation("io.github.openhtmltopdf:openhtmltopdf-pdfbox:${openhtmltopdfVersion}")
     implementation("io.github.openhtmltopdf:openhtmltopdf-mathml-support:${openhtmltopdfVersion}")
     implementation "io.github.openhtmltopdf:openhtmltopdf-svg-support:${openhtmltopdfVersion}"
-    implementation 'org.jsoup:jsoup:1.18.1'
+    implementation 'org.jsoup:jsoup:1.18.3'
     // Remember to update HtmlDecorator.BOOTSTRAP_CSS_PATH if the dependency changes
     implementation 'org.webjars:bootstrap:5.3.3'
-    implementation 'se.alipsa.groovy:matrix-core:2.1.0-SNAPSHOT'
+    implementation 'se.alipsa.groovy:matrix-core:2.1.1'
     implementation('se.alipsa.groovy:matrix-charts:1.0.0-SNAPSHOT')
     implementation('org.apache.pdfbox:fontbox:3.0.3')
 
