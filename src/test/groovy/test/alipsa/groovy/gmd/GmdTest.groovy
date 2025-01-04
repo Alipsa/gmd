@@ -2,7 +2,6 @@ package test.alipsa.groovy.gmd
 
 import org.apache.commons.io.IOUtils
 
-import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 
 import static org.junit.jupiter.api.Assertions.*
@@ -157,11 +156,11 @@ class GmdTest {
     def text = '''
     # Applications on `=the_date`
     ```{groovy echo=false}
-    // @Grab('se.alipsa.groovy:matrix:2.0.0')
+    // @Grab('se.alipsa.matrix:matrix-core:2.2.0')
     
-    import static se.alipsa.groovy.matrix.ListConverter.*
+    import static se.alipsa.matrix.core.ListConverter.*
       
-    import se.alipsa.groovy.matrix.Matrix
+    import se.alipsa.matrix.core.Matrix
     import java.time.LocalDate
     out.print(Matrix.builder().data(
         emp_id: 1..5,
@@ -223,10 +222,10 @@ class GmdTest {
 
     text = '''
     ```{groovy}
-    import static se.alipsa.groovy.matrix.ListConverter.*
+    import static se.alipsa.matrix.core.ListConverter.*
 
-    import se.alipsa.groovy.matrix.*
-    import se.alipsa.groovy.charts.*
+    import se.alipsa.matrix.core.*
+    import se.alipsa.matrix.charts.*
     import java.time.LocalDate
 
     def empData = Matrix.builder().data(
@@ -358,10 +357,10 @@ class GmdTest {
 # Employees
 
 ```{groovy}
-import static se.alipsa.groovy.matrix.ListConverter.*
+import static se.alipsa.matrix.core.ListConverter.*
 
-import se.alipsa.groovy.matrix.*
-import se.alipsa.groovy.charts.*
+import se.alipsa.matrix.core.*
+import se.alipsa.matrix.charts.*
 import java.time.LocalDate 
 
 def empData = Matrix.builder().data(

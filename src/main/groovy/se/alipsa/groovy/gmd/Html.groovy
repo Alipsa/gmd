@@ -1,8 +1,8 @@
 package se.alipsa.groovy.gmd
 
-import se.alipsa.groovy.charts.Chart
-import se.alipsa.groovy.charts.Plot
-import se.alipsa.groovy.matrix.Matrix
+import se.alipsa.matrix.charts.Chart
+import se.alipsa.matrix.charts.Plot
+import se.alipsa.matrix.core.Matrix
 
 /**
  * This class makes i convenient to write Groovy code that creates html which is

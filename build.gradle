@@ -55,8 +55,8 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.18.3'
     // Remember to update HtmlDecorator.BOOTSTRAP_CSS_PATH if the dependency changes
     implementation 'org.webjars:bootstrap:5.3.3'
-    implementation 'se.alipsa.groovy:matrix-core:2.1.1'
-    implementation('se.alipsa.groovy:matrix-charts:1.0.0-SNAPSHOT')
+    implementation 'se.alipsa.matrix:matrix-core:2.2.0-SNAPSHOT'
+    implementation('se.alipsa.matrix:matrix-charts:1.0.0-SNAPSHOT')
     implementation('org.apache.pdfbox:fontbox:3.0.3')
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
