@@ -18,9 +18,10 @@ repositories {
     mavenCentral()
 }
 
-tasks.withType(JavaCompile).configureEach {
-    sourceCompatibility = "17"
-    targetCompatibility = "17"
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 dependencies {
@@ -47,8 +48,6 @@ dependencies {
     implementation "org.apache.logging.log4j:log4j-api:${log4jVersion}"
     implementation "org.commonmark:commonmark:0.24.0"
     implementation "org.commonmark:commonmark-ext-gfm-tables:0.24.0"
-    // TODO: Consider using https://github.com/flyingsaucerproject/flyingsaucer instead as it is more actively maintained than https://github.com/openhtmltopdf/openhtmltopdf
-    // Journo uses flying saucer...
     implementation("io.github.openhtmltopdf:openhtmltopdf-core:${openhtmltopdfVersion}")
     implementation("io.github.openhtmltopdf:openhtmltopdf-pdfbox:${openhtmltopdfVersion}")
     implementation("io.github.openhtmltopdf:openhtmltopdf-mathml-support:${openhtmltopdfVersion}")
