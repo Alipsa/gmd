@@ -4,12 +4,12 @@ plugins {
     id 'signing'
     id 'maven-publish'
     id('io.github.gradle-nexus.publish-plugin') version '2.0.0'
-    id "com.github.ben-manes.versions" version "0.51.0"
+    id "com.github.ben-manes.versions" version "0.52.0"
 }
 
 group 'se.alipsa.groovy'
 // NOTE: remember to bump version in GmdTemplateEngine when changed
-version '1.1.0-SNAPSHOT'
+version '2.2.0-SNAPSHOT'
 
 repositories {
     if (version.contains('SNAPSHOT')) {
@@ -28,8 +28,9 @@ dependencies {
     def junitVersion = "5.11.4"
     def openhtmltopdfVersion = "1.1.24"
     def log4jVersion = "[2.18.0, )"
-    def groovyVersion = "4.0.24"
-    def javaFxVersion = '22.0.2'
+    def groovyVersion = "4.0.25"
+    def javaFxVersion = '23.0.2'
+    def matrixBomVersion = "1.1.0-SNAPSHOT"
     org.gradle.internal.os.OperatingSystem os = org.gradle.internal.os.OperatingSystem.current()
     // check https://repo1.maven.org/maven2/org/openjfx/javafx/20/javafx-20.pom for the platform property
     def qualifier = 'unknown'
@@ -55,9 +56,10 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.18.3'
     // Remember to update HtmlDecorator.BOOTSTRAP_CSS_PATH if the dependency changes
     implementation 'org.webjars:bootstrap:5.3.3'
-    implementation 'se.alipsa.matrix:matrix-core:2.2.0-SNAPSHOT'
-    implementation('se.alipsa.matrix:matrix-charts:1.0.0-SNAPSHOT')
-    implementation('org.apache.pdfbox:fontbox:3.0.3')
+    implementation(platform("se.alipsa.matrix:matrix-bom:$matrixBomVersion"))
+    implementation 'se.alipsa.matrix:matrix-core'
+    implementation('se.alipsa.matrix:matrix-charts')
+    implementation('org.apache.pdfbox:fontbox:3.0.4')
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"

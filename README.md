@@ -199,7 +199,7 @@ saveHtmlAsPdf(html, pdfFile, gmd)
 Alternatives to using JavaFx WebView might be [Web-K](https://github.com/Earnix/Web-K) or [J2V8](https://github.com/eclipsesource/J2V8)
 , but I have not tested any of those.
 
-The library, which requires Java 17 or later, is available from maven central:
+The library, which requires Java 21 or later, is available from maven central:
 
 Gradle: 
 ```groovy
@@ -212,8 +212,8 @@ if (os.isLinux()) {
 } else if (os.isMacOsX()) {
   qualifier = 'mac-aarch64'
 }
-def javaFxVersion = '20'
-implementation "se.alipsa.groovy:gmd:1.0.7"
+def javaFxVersion = '23.0.2'
+implementation "se.alipsa.groovy:gmd:2.0.0"
 implementation "org.openjfx:javafx-base:${javaFxVersion}:${qualifier}"
 implementation "org.openjfx:javafx-graphics:${javaFxVersion}:${qualifier}"
 implementation "org.openjfx:javafx-controls:${javaFxVersion}:${qualifier}"
@@ -224,13 +224,13 @@ Maven:
 ```xml
 <build>
   <properties>
-      <javaFxVersion>20</javaFxVersion>
+      <javaFxVersion>23.0.2</javaFxVersion>
   </properties>
   <dependencies>  
     <dependency>
       <groupId>se.alipsa.groovy</groupId>
       <artifactId>gmd</artifactId>
-      <version>1.0.7</version>
+      <version>2.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
@@ -248,8 +248,8 @@ Maven:
 
 Release history
 
-### v1.1.0, in progress
-- upgrade dependencies (require java 17, bootstrap 5.3.3, etc.)
+### v2.0.0, in progress
+- upgrade dependencies (require java 21, bootstrap 5.3.3, etc.)
 - add support for Matrix (se.alipsa.groovy.matrix) data
 - add support for Matrix charts which (currently) requires java fx
 - Remove the use of the SimpleTemplateEngine due to the size limitation
