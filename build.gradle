@@ -9,7 +9,7 @@ plugins {
 
 group 'se.alipsa.groovy'
 // NOTE: remember to bump version in GmdTemplateEngine when changed
-version '2.2.0-SNAPSHOT'
+version '2.0.0-SNAPSHOT'
 
 repositories {
     if (version.contains('SNAPSHOT')) {
@@ -30,7 +30,7 @@ dependencies {
     def log4jVersion = "[2.18.0, )"
     def groovyVersion = "4.0.25"
     def javaFxVersion = '23.0.2'
-    def matrixBomVersion = "1.1.0-SNAPSHOT"
+    def matrixBomVersion = "1.1.1"
     org.gradle.internal.os.OperatingSystem os = org.gradle.internal.os.OperatingSystem.current()
     // check https://repo1.maven.org/maven2/org/openjfx/javafx/20/javafx-20.pom for the platform property
     def qualifier = 'unknown'
