@@ -1,8 +1,8 @@
 # gmd - Groovy Markdown
 
 Groovy markdown is basically markdown with some groovy code for dynamic rendering.
-It is based on the GmdTemplateEngine and the [Flexmark
-Markdown package](https://github.com/vsch/flexmark-java).
+It is based on the GmdTemplateEngine and the [Commonmark
+Markdown package](https://commonmark.org/).
 
 A gmd file (or text) is markdown with groovy code in codeblocks starting with \```{groovy} and ending with \```
 (similar to rmd and mdr files) and \`= \` for direct value output.

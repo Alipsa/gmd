@@ -11,6 +11,7 @@
 - Change to active openhtmltopdf fork
 - Use Matrix toHtml implementation to render tables instead of the OOTB GFM support
 - Add support for command line invocation
+- Add support for styled pdf by running the javascript in a javafx WebView
 
 ### v1.0.7, 2023-02-24
 - Fix bug in code md snippets so that \```{groovy} now becomes \```groovy
