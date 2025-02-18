@@ -406,4 +406,15 @@ out.println(chart)
     assertTrue(pdfFile.exists())
     println("Wrote $pdfFile.absolutePath")
   }
+
+  @Test
+  void gmdCommandLineTest() {
+    String file = getClass().getResource("/test.gmd").getFile()
+    File htmlFile = new File("gmdCommandLineTest.html")
+    Gmd.main("toHtml", file, htmlFile.absolutePath)
+    File pdfFile = new File("gmdCommandLineTest.pdf")
+    Gmd.main("toHtml", file, pdfFile.absolutePath)
+    htmlFile.delete()
+    pdfFile.delete()
+  }
 }
