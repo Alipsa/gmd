@@ -87,7 +87,7 @@ class GmdTest {
 
   @Test
   void testInlineExpression() {
-    def gmd = new Gmd();
+    def gmd = new Gmd()
     def html = gmd.gmdToHtml('1 + 2 = `= 1+2`')
     assertEquals('<p>1 + 2 = 3</p>\n', html)
   }
