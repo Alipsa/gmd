@@ -20,14 +20,14 @@ repositories {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
 dependencies {
     def junitVersion = "5.11.4"
     def openhtmltopdfVersion = "1.1.24"
-    def log4jVersion = "[2.18.0, )"
+    def log4jVersion = "2.24.3"
     def groovyVersion = "4.0.25"
     def javaFxVersion = '23.0.2'
     def matrixBomVersion = "1.1.1"
@@ -70,10 +70,10 @@ dependencies {
     testImplementation 'org.apache.commons:commons-lang3:3.17.0'
 
     // Qualifier must be explicit on linux for some reason, works without qualifiers on mac
-    testImplementation "org.openjfx:javafx-base:${javaFxVersion}:${qualifier}"
-    testImplementation "org.openjfx:javafx-graphics:${javaFxVersion}:${qualifier}"
-    testImplementation "org.openjfx:javafx-controls:${javaFxVersion}:${qualifier}"
-    testImplementation "org.openjfx:javafx-swing:${javaFxVersion}:${qualifier}"
+    //testImplementation "org.openjfx:javafx-base:${javaFxVersion}:${qualifier}"
+    //testImplementation "org.openjfx:javafx-graphics:${javaFxVersion}:${qualifier}"
+    //testImplementation "org.openjfx:javafx-controls:${javaFxVersion}:${qualifier}"
+    //testImplementation "org.openjfx:javafx-swing:${javaFxVersion}:${qualifier}"
 }
 
 test {
@@ -81,6 +81,27 @@ test {
     testLogging.showStandardStreams = true
 
     useJUnitPlatform()
+}
+
+task fatJar(type: Jar, dependsOn: jar) {
+    manifest {
+        attributes 'Main-Class': 'se.alipsa.groovy.gmd.Gmd'
+    }
+    archiveBaseName = 'gmd-bundled'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        def cp = configurations.compileClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+        configurations.testRuntimeClasspath.each {
+            if (it.getName().contains('log4j-core')) {
+                cp << zipTree(it)
+            }
+        }
+        //println cp
+        cp
+    }
+    with jar
 }
 
 //Maven Central uploads

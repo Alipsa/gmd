@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger
 
 class HtmlDecorator {
 
-  private static final Logger log = LogManager.getLogger()
+  private static final Logger log = LogManager.getLogger(HtmlDecorator.class)
 
   public static final String HIGHLIGHT_JS_CSS_PATH = "/highlightJs/styles/default.min.css"
   public static final String HIGHLIGHT_JS_SCRIPT_PATH = "/highlightJs/highlight.min.js"

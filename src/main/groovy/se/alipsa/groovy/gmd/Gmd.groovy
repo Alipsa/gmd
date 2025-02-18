@@ -23,6 +23,10 @@ class Gmd {
   final Parser parser
   final HtmlRenderer renderer
 
+  static void main(String[] args) {
+    new GmdCommandLine(args).run()
+  }
+
   Gmd() {
     XRLog.setLoggerImpl(new Log4jXRLogger());
     parser = Parser.builder().build()
@@ -123,7 +127,7 @@ class Gmd {
     if (file == null) {
       throw new IllegalArgumentException("File parameter cannot be null")
     }
-    if (!file.getParentFile().exists()) {
+    if (file.getParentFile() != null && !file.getParentFile().exists()) {
       file.getParentFile().mkdirs()
     }
     if (!file.exists()) {

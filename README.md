@@ -199,91 +199,32 @@ saveHtmlAsPdf(html, pdfFile, gmd)
 Alternatives to using JavaFx WebView might be [Web-K](https://github.com/Earnix/Web-K) or [J2V8](https://github.com/eclipsesource/J2V8)
 , but I have not tested any of those.
 
-The library, which requires Java 21 or later, is available from maven central:
+The library, which requires Java 17 or later, is available from maven central:
 
 Gradle: 
 ```groovy
-org.gradle.internal.os.OperatingSystem os = org.gradle.internal.os.OperatingSystem.current()
-def qualifier = 'unknown'
-if (os.isLinux()) {
-  qualifier='linux'
-} else if (os.isWindows()) {
-  qualifier = 'win'
-} else if (os.isMacOsX()) {
-  qualifier = 'mac-aarch64'
-}
-def javaFxVersion = '23.0.2'
 implementation "se.alipsa.groovy:gmd:2.0.0"
-implementation "org.openjfx:javafx-base:${javaFxVersion}:${qualifier}"
-implementation "org.openjfx:javafx-graphics:${javaFxVersion}:${qualifier}"
-implementation "org.openjfx:javafx-controls:${javaFxVersion}:${qualifier}"
-implementation "org.openjfx:javafx-swing:${javaFxVersion}:${qualifier}"
 ```
 
 Maven:
 ```xml
 <build>
-  <properties>
-      <javaFxVersion>23.0.2</javaFxVersion>
-  </properties>
   <dependencies>  
     <dependency>
       <groupId>se.alipsa.groovy</groupId>
       <artifactId>gmd</artifactId>
       <version>2.0.0</version>
     </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-controls</artifactId>
-      <version>${javaFxVersion}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-swing</artifactId>
-      <version>${javaFxVersion}</version>
-    </dependency>
   </dependencies>
 </build>
 ```
-
-Release history
-
-### v2.0.0, in progress
-- upgrade dependencies (require java 21, bootstrap 5.3.3, etc.)
-- add support for Matrix (se.alipsa.groovy.matrix) data
-- add support for Matrix charts which (currently) requires java fx
-- Remove the use of the SimpleTemplateEngine due to the size limitation
-  as a consequence, scriptlet syntax is no longer supported
-- Add Html class for convenient groovy -> html generation
-- Change from flexmark to commonmark
-- Change to active openhtmltopdf fork
-- Use Matrix toHtml implementation to render tables instead of the OOTB GFM support
-
-### v1.0.7, 2023-02-24
-- Fix bug in code md snippets so that \```{groovy} now becomes \```groovy
-- Add support for value insertion (`=)
-- Throw gmd exceptions if something goes wrong
-
-### v1.0.6, 2023-02-17
-- add support for executing groovy code in the code md code snippets
-
-### v1.0.5, 2023-02-15
-- Change groovy dependency from implementation to compileOnly
-
-### v1.0.4, 2022-08-16
-- htmlToPdf now creates the file if it does not exist
-- upgrade bootstrap to 5.2.0
-
-### v1.0.3, 2022-07-29
-- remove gmdToPdf and mdToPdf methods since the output is not faithful to the html
-- add docs on how to render a pdf faithful to the html
-
-### v1.0.2, 2022-07-26
-- add htmlToPdf methods
-
-### v1.0.1, 2022-07-25
-- upgrade to groovy 4.0.4
-- Fix deploy script so publish to maven central works
-
-### v1.0.0, 2022-07-24
-- initial version
+## Using Gmd from the command line
+The release artifacts on github contains a fat jar (e.g. gmd-bundled-2.0.0.jar)
+that enables you to use Gmd from the command line.
+```
+java -jar gmd-bundled-2.0.0.jar toHtml test.gmd test.html
+```
+or for a pdf:
+```
+java -jar gmd-bundled-2.0.0.jar toPdf test.gmd test.pdf
+```
