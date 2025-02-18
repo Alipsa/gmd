@@ -9,16 +9,7 @@ import static org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import se.alipsa.groovy.gmd.Gmd
 
-class GmdTest {
-
-  private static File testOutputDir = new File("build/test-results/")
-
-  @BeforeAll
-  static void init() {
-    if (!testOutputDir.exists()) {
-      testOutputDir.mkdirs()
-    }
-  }
+class GmdTest extends AbstractGmdTest {
 
   def text = """\
         # Hello
