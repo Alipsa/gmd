@@ -1,6 +1,7 @@
 package test.alipsa.groovy.gmd
 
 import org.apache.commons.io.IOUtils
+import org.junit.jupiter.api.BeforeAll
 
 import java.nio.charset.StandardCharsets
 
@@ -9,6 +10,15 @@ import org.junit.jupiter.api.Test
 import se.alipsa.groovy.gmd.Gmd
 
 class GmdTest {
+
+  private static File testOutputDir = new File("build/test-results/")
+
+  @BeforeAll
+  static void init() {
+    if (!testOutputDir.exists()) {
+      testOutputDir.mkdirs()
+    }
+  }
 
   def text = """\
         # Hello
@@ -76,6 +86,13 @@ class GmdTest {
   }
 
   @Test
+  void testInlineExpression() {
+    def gmd = new Gmd();
+    def html = gmd.gmdToHtml('1 + 2 = `= 1+2`')
+    assertEquals('<p>1 + 2 = 3</p>\n', html)
+  }
+
+  @Test
   void testParameterized() {
     def gmd = new Gmd();
     def html = gmd.gmdToHtml('Today is `= theDate`', [theDate: '2023-08-14'])
@@ -85,11 +102,11 @@ class GmdTest {
   @Test
   void gmdToPdf() {
     def gmd = new Gmd()
-    def pdfFile = File.createTempFile("weather", ".pdf")
+    def pdfFile = new File(testOutputDir, "gmdToPdf.pdf")
+    if (pdfFile.exists()) pdfFile.delete()
     def html = gmd.gmdToHtmlDoc(text)
     gmd.htmlToPdf(html, pdfFile)
     assertTrue(pdfFile.exists())
-    pdfFile.delete()
   }
 
   @Test
@@ -113,10 +130,10 @@ class GmdTest {
     def text = '## Hello `=name`!'
     def gmd = new Gmd()
     def html = gmd.gmdToHtmlDoc(text, [name: "Per"])
-    def pdfFile = File.createTempFile("weather", ".pdf")
+    def pdfFile = new File(testOutputDir, "gmdToPdfWithParameter.pdf")
+    if (pdfFile.exists()) pdfFile.delete()
     gmd.htmlToPdf(html, pdfFile)
     assertTrue(pdfFile.exists())
-    pdfFile.delete()
   }
 
   @Test
@@ -145,10 +162,10 @@ class GmdTest {
 
     assertTrue(html.contains("<h1>Some equations</h1>\n<p>X = ∑(√2π + ∛3)</p>\n"))
 
-    def pdfFile = File.createTempFile("special", ".pdf")
+    def pdfFile = new File(testOutputDir, "testPdfWithSpecialCharacters.pdf")
+    if (pdfFile.exists()) pdfFile.delete()
     gmd.htmlToPdf(html, pdfFile)
     assertTrue(pdfFile.exists())
-    pdfFile.delete()
   }
 
   @Test
@@ -384,7 +401,7 @@ out.println(chart)
   void testMathmlToPDF() {
     def html = IOUtils.toString(this.class.getResource('/mathml.html'), StandardCharsets.UTF_8)
     Gmd gmd = new Gmd()
-    def pdfFile = new File("build/test-results/mathml.pdf")
+    def pdfFile = new File(testOutputDir, "testMathmlToPDF.pdf")
     gmd.htmlToPdf(html, pdfFile)
     assertTrue(pdfFile.exists())
     println("Wrote $pdfFile.absolutePath")
