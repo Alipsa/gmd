@@ -80,7 +80,7 @@ def md = gmd.gmdToMd(text, [name: "Per"])
 // Or directly to html
 def html = gmd.gmdToHtml(text, [name: "Per"])
 
-// the html can then be used to create a pdf pdf
+// the html can then be used to create a pdf
 gmd.htmlToPdf(html, [name: "Per"], new File("pdfFile.pdf"))
 ```
 
@@ -157,3 +157,4 @@ or for a pdf:
 ```
 java -jar gmd-bundled-2.0.0.jar toPdf test.gmd test.pdf
 ```
+Note: If you don't want the styled (highlight) PDF version you can use toPdfRaw instead.

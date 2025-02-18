@@ -14,8 +14,9 @@ class GmdCommandLine {
     def command = args[0].toLowerCase()
     runner = switch (command) {
       case 'tohtml' -> toHtml(args[1], args[2])
-      case 'topdf' -> toPdf(args[1], args[2])
-      default -> throw new IllegalArgumentException("Unknown command $command, expected either tohtml or topdf")
+      case 'topdfraw' -> toPdfRaw(args[1], args[2])
+      case 'topdf' -> toPdfStyled(args[1], args[2])
+      default -> throw new IllegalArgumentException("Unknown command $command, expected either toHtml, toPdf or toPdfRaw")
     }
   }
 
@@ -29,12 +30,22 @@ class GmdCommandLine {
     }
   }
 
-  static Closure toPdf(String from, String to) {
+  static Closure toPdfRaw(String from, String to) {
     return {
       Gmd gmd = new Gmd()
       def html = gmdFileToHtml(from, gmd)
       File toFile = new File(to)
       gmd.htmlToPdf(html, toFile)
+      println "Wrote $toFile.absolutePath"
+    }
+  }
+
+  static Closure toPdfStyled(String from, String to) {
+    return {
+      Gmd gmd = new Gmd()
+      def html = gmdFileToHtml(from, gmd)
+      File toFile = new File(to)
+      gmd.processHtmlAndSaveAsPdf(html, toFile, true)
       println "Wrote $toFile.absolutePath"
     }
   }

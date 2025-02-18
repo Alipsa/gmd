@@ -1,5 +1,7 @@
 package test.alipsa.groovy.gmd
 
+import javafx.application.Platform
+import javafx.embed.swing.JFXPanel
 import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.BeforeAll
 

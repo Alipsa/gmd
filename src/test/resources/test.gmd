@@ -1,5 +1,5 @@
 # Employee info on `=java.time.LocalDate.now()`
-```{groovy echo=false}
+```{groovy echo=true}
     import static se.alipsa.matrix.core.ListConverter.*
       
     import se.alipsa.matrix.core.Matrix

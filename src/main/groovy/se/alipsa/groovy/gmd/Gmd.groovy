@@ -1,5 +1,9 @@
 package se.alipsa.groovy.gmd
-
+// We fetch javafx using Grab as doing
+// implementation "org.openjfx:javafx-base:${javaFxVersion}:${qualifier}"
+// in in build.gradle makes the fatJar os dependent
+@groovy.lang.Grab("org.openjfx:javafx-controls:23.0.2")
+@groovy.lang.Grab("org.openjfx:javafx-swing:23.0.2")
 import com.openhtmltopdf.mathmlsupport.MathMLDrawer
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer
@@ -22,13 +26,13 @@ import org.w3c.dom.Document
 
 import javax.xml.transform.OutputKeys
 import javax.xml.transform.Transformer
-import javax.xml.transform.TransformerException
 import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.atomic.AtomicReference
 
 import static se.alipsa.groovy.gmd.HtmlDecorator.BOOTSTRAP_CSS
 import static se.alipsa.groovy.gmd.HtmlDecorator.decorate
@@ -86,8 +90,7 @@ class Gmd {
   }
 
   void mdToHtml(String markdown, File target) {
-    Node document = parser.parse(markdown)
-    target.write(renderer.render(document))
+    target.write(renderer.render(parser.parse(markdown)))
   }
 
   void mdToHtmlDoc(String markdown, File target) {
@@ -106,35 +109,26 @@ class Gmd {
   }
 
   void mdToPdf(String md, OutputStream target) throws GmdException {
-    String html = mdToHtmlDoc(md)
-    // TODO: "run" the html so that highlightJs can add appropriate style to the code sections
-    //PdfConverterExtension.exportToPdf(target, html, "", pdfOptions)
-    htmlToPdf(html, target)
+    htmlToPdf(mdToHtmlDoc(md), target)
   }
 
   String gmdToHtml(String gmd) throws GmdException {
-    String md = gmdToMd(gmd)
-    return mdToHtml(md)
+    return mdToHtml(gmdToMd(gmd))
   }
 
   String gmdToHtmlDoc(String gmd) throws GmdException {
-    String md = gmdToMd(gmd)
-    return mdToHtmlDoc(md)
+    return mdToHtmlDoc(gmdToMd(gmd))
   }
 
   String gmdToHtml(String gmd, Map bindings) throws GmdException {
-    String md = gmdToMd(gmd, bindings)
-    return mdToHtml(md)
+    return mdToHtml(gmdToMd(gmd, bindings))
   }
 
   String gmdToHtmlDoc(String gmd, Map bindings) throws GmdException {
-    String md = gmdToMd(gmd, bindings)
-    return mdToHtmlDoc(md)
+    return mdToHtmlDoc(gmdToMd(gmd, bindings))
   }
 
   void htmlToPdf(String html, OutputStream target) {
-    // TODO: "run" the html so that highlightJs can add appropriate style to the code sections
-    //PdfConverterExtension.exportToPdf(target, html, "", pdfOptions)
     var jsDoc = Jsoup.parse(html)
     Document doc = new W3CDom().fromJsoup(jsDoc)
     htmlToPdf(doc, target)
@@ -155,32 +149,46 @@ class Gmd {
     }
   }
 
-  static void htmlToPdf(Document doc, OutputStream os) throws IOException {
-    PdfRendererBuilder builder = basicBuilder()
+  void htmlToPdf(Document doc, OutputStream os) throws IOException {
+    PdfRendererBuilder builder = new PdfRendererBuilder()
+        .useSVGDrawer(new BatikSVGDrawer())
+        .useMathMLDrawer(new MathMLDrawer())
         .withW3cDocument(doc, new File(".").toURI().toString())
         .toStream(os)
     builder.run()
   }
 
-  private static PdfRendererBuilder basicBuilder() {
-    new PdfRendererBuilder()
-        .useSVGDrawer(new BatikSVGDrawer())
-        .useMathMLDrawer(new MathMLDrawer())
+  void processHtmlAndSaveAsPdf(String html, File target, boolean exitOnFinish = false) throws GmdException {
+    if (target == null) {
+      throw new IllegalArgumentException("Target file cannot be null")
+    }
+    try (OutputStream os = Files.newOutputStream(target.toPath())) {
+      processHtmlAndSaveAsPdf(html, os, exitOnFinish)
+    }
   }
 
   /**
-   * We load the html into a web view so that the highlight javascript properly add classes to code parts
+   * Load the html into a web view so that the highlight javascript properly add classes to code parts
    * then we extract the DOM from the web view and use that to produce the PDF
+   *
    * @param html a string containing the html to render
-   * @param target the pdf file to write to
-   * @param gmd the Gmd object used to write the pdf
+   * @param target the pdf output stream to write to
+   * @param exitOnFinish execute Platform.exit() on completion
    */
-  static void processHtmlAndSaveAsPdf(String html, File target) {
+  void processHtmlAndSaveAsPdf(String html, OutputStream target, boolean exitOnFinish = false) throws GmdException {
+    if (html == null) {
+      throw new IllegalArgumentException("Html content cannot be null")
+    }
+    if (target == null) {
+      throw new IllegalArgumentException("Target output stream cannot be null")
+    }
     //noinspection GroovyResultOfObjectAllocationIgnored
     new JFXPanel() // Initiate graphics
-    final CountDownLatch latchToWaitForJavaFx = new CountDownLatch(1);
+    final CountDownLatch latchToWaitForJavaFx = new CountDownLatch(1)
+    final AtomicReference<Throwable> exc = new AtomicReference<>(null)
+    WebView webview
     Platform.runLater {
-      WebView webview = new WebView()
+      webview = new WebView()
       final WebEngine webEngine = webview.getEngine()
       webEngine.setJavaScriptEnabled(true)
       webEngine.setUserStyleSheetLocation(BOOTSTRAP_CSS)
@@ -188,8 +196,8 @@ class Gmd {
         @Override
         void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
           if (newState == Worker.State.SUCCEEDED) {
-            Document doc = webEngine.getDocument()
-            try (OutputStream os = Files.newOutputStream(target.toPath())) {
+            try {
+              Document doc = webEngine.getDocument()
               Transformer transformer = TransformerFactory.newInstance().newTransformer()
               transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no")
               transformer.setOutputProperty(OutputKeys.METHOD, "html")
@@ -211,8 +219,11 @@ class Gmd {
                   .useSVGDrawer(new BatikSVGDrawer())
                   .useMathMLDrawer(new MathMLDrawer())
                   .withW3cDocument(doc3, new File(".").toURI().toString())
-                  .toStream(os)
+                  .toStream(target)
               builder.run()
+            } catch (Throwable t) {
+              exc.set(t)
+            } finally {
               latchToWaitForJavaFx.countDown()
             }
           }
@@ -221,5 +232,11 @@ class Gmd {
       webEngine.loadContent(html)
     }
     latchToWaitForJavaFx.await()
+    if (exitOnFinish) {
+      Platform.exit()
+    }
+    if (exc.get() != null) {
+      throw new GmdException("Failed to process html in the WebView", exc.get())
+    }
   }
 }
