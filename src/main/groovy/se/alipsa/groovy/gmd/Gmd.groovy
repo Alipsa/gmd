@@ -58,6 +58,60 @@ class Gmd {
   }
 
   /**
+   * Process the Groovy Markdown text into a html document and write it to the File.
+   *
+   * @param gmd Groovy Markdown text
+   * @param outFile the File to write to
+   * @param bindings the variables to resolve in the text (optional)
+   */
+  void gmdToHtml(String gmd, File outFile, Map bindings = [:]) throws GmdException {
+    try {
+      outFile.write(gmdToHtmlDoc(gmd, bindings))
+    } catch (IOException e) {
+      throw new GmdException("Failed to write to the file", e)
+    }
+  }
+
+  /**
+   * Process the Groovy Markdown text into a html document and write it to the Writer.
+   *
+   * @param gmd Groovy Markdown text
+   * @param out the Writer to write to
+   * @param bindings the variables to resolve in the text (optional)
+   */
+  void gmdToHtml(String gmd, Writer out, Map bindings = [:]) throws GmdException {
+    try {
+      out.write(gmdToHtmlDoc(gmd, bindings))
+    } catch (IOException e) {
+      throw new GmdException("Failed to write to the file", e)
+    }
+  }
+
+  /**
+   * Process the Groovy Markdown text and save it to the file.
+   * The markdown is processed in a Javafx WebView to enable javascript styling.
+   *
+   * @param gmd Groovy Markdown text
+   * @param out the OutputStream to write to
+   * @param bindings the variables to resolve in the text (optional)
+   */
+  void gmdToPdf(String gmd, OutputStream out, Map bindings = [:]) throws GmdException {
+    processHtmlAndSaveAsPdf(gmdToHtmlDoc(gmd, bindings), out)
+  }
+
+  /**
+   * Process the Groovy Markdown text and save it to the file.
+   * The markdown is processed in a Javafx WebView to enable javascript styling.
+   *
+   * @param gmd Groovy Markdown text
+   * @param file the File to write to
+   * @param bindings the variables to resolve in the text (optional)
+   */
+  void gmdToPdf(String gmd, File file, Map bindings = [:]) throws GmdException {
+    processHtmlAndSaveAsPdf(gmdToHtmlDoc(gmd, bindings), file)
+  }
+
+  /**
    * Process the Groovy Markdown text into standard markdown
    * @param text
    * @param bindings the variables to resolve in the text
@@ -69,6 +123,54 @@ class Gmd {
     } catch (CompilationFailedException | ClassNotFoundException | IOException e) {
       throw new GmdException("Failed to process gmd", e)
     }
+  }
+
+  /**
+   * Process the gmd into markdown and then into the html snippet.
+   * This is useful e.g. for embedding that html in a larger html document.
+   *
+   * @param gmd the Groovy Markdown to process
+   * @return the html equivalent of the gmd
+   * @throws GmdException
+   */
+  String gmdToHtml(String gmd) throws GmdException {
+    return mdToHtml(gmdToMd(gmd))
+  }
+
+  /**
+   * Process the gmd into markdown and then into a (complete) html document.
+   *
+   * @param gmd the Groovy Markdown to process
+   * @return the html equivalent of the gmd
+   * @throws GmdException
+   */
+  String gmdToHtmlDoc(String gmd) throws GmdException {
+    return mdToHtmlDoc(gmdToMd(gmd))
+  }
+
+  /**
+   * Process the gmd into markdown and then into the html snippet.
+   * This is useful e.g. for embedding that html in a larger html document.
+   *
+   * @param gmd the Groovy Markdown to process
+   * @param bindings the variables to resolve in the text
+   * @return the html equivalent of the gmd
+   * @throws GmdException
+   */
+  String gmdToHtml(String gmd, Map bindings) throws GmdException {
+    return mdToHtml(gmdToMd(gmd, bindings))
+  }
+
+  /**
+   * Process the gmd into markdown and then into a (complete) html document.
+   *
+   * @param gmd the Groovy Markdown to process
+   * @param bindings the variables to resolve in the text
+   * @return the html equivalent of the gmd
+   * @throws GmdException
+   */
+  String gmdToHtmlDoc(String gmd, Map bindings) throws GmdException {
+    return mdToHtmlDoc(gmdToMd(gmd, bindings))
   }
 
   /**
@@ -110,22 +212,6 @@ class Gmd {
 
   void mdToPdf(String md, OutputStream target) throws GmdException {
     htmlToPdf(mdToHtmlDoc(md), target)
-  }
-
-  String gmdToHtml(String gmd) throws GmdException {
-    return mdToHtml(gmdToMd(gmd))
-  }
-
-  String gmdToHtmlDoc(String gmd) throws GmdException {
-    return mdToHtmlDoc(gmdToMd(gmd))
-  }
-
-  String gmdToHtml(String gmd, Map bindings) throws GmdException {
-    return mdToHtml(gmdToMd(gmd, bindings))
-  }
-
-  String gmdToHtmlDoc(String gmd, Map bindings) throws GmdException {
-    return mdToHtmlDoc(gmdToMd(gmd, bindings))
   }
 
   void htmlToPdf(String html, OutputStream target) {
@@ -232,6 +318,7 @@ class Gmd {
       webEngine.loadContent(html)
     }
     latchToWaitForJavaFx.await()
+    webview = null
     if (exitOnFinish) {
       Platform.exit()
     }

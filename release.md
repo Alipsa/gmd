@@ -1,6 +1,14 @@
 # Gmd Release History
 
-### v2.0.0, in progress
+### v2.1.0, In progress
+- Add methods for direct output i.e. 
+  - gmdToHtml(String gmd, File outFile, Map bindings = [:])
+  - gmdToHtml(String gmd, Writer out, Map bindings = [:])
+  - gmdToPdf(String gmd, OutputStream out, Map bindings = [:])
+  - gmdToPdf(String gmd, File file, Map bindings = [:]
+- 
+
+### v2.0.0, 2025-02-18
 - upgrade dependencies (require java 21, bootstrap 5.3.3, etc.)
 - add support for Matrix (se.alipsa.groovy.matrix) data
 - add support for Matrix charts which (currently) requires java fx

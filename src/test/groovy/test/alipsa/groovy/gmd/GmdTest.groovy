@@ -1,9 +1,6 @@
 package test.alipsa.groovy.gmd
 
-import javafx.application.Platform
-import javafx.embed.swing.JFXPanel
 import org.apache.commons.io.IOUtils
-import org.junit.jupiter.api.BeforeAll
 
 import java.nio.charset.StandardCharsets
 
@@ -42,6 +39,39 @@ class GmdTest extends AbstractGmdTest {
         Now, that's something to look forward to!
         
         """.stripIndent()
+
+  @Test
+  void gmdToHtmlFile() {
+    def gmd = new Gmd()
+    def htmlfFile = new File(testOutputDir, "gmdToHtmlFile.pdf")
+    if (htmlfFile.exists()) htmlfFile.delete()
+    gmd.gmdToHtml(text, htmlfFile)
+    assertEquals(gmd.gmdToHtmlDoc(text), htmlfFile.text)
+
+    StringWriter sw = new StringWriter()
+    gmd.gmdToHtml(text, sw)
+    assertEquals(htmlfFile.text, sw.toString())
+  }
+
+  @Test
+  void gmdToPdf() {
+    def gmd = new Gmd()
+    def pdfFile = new File(testOutputDir, "gmdToPdf.pdf")
+    if (pdfFile.exists()) pdfFile.delete()
+    def html = gmd.gmdToHtmlDoc(text)
+    gmd.htmlToPdf(html, pdfFile)
+    assertTrue(pdfFile.exists())
+    def pdfFile2 = new File(testOutputDir, "gmdToPdf2.pdf")
+    if (pdfFile2.exists()) pdfFile2.delete()
+    gmd.gmdToPdf(text, pdfFile2)
+    assertTrue(pdfFile.exists())
+    // Files might differ with a few bytes
+    assertEquals((pdfFile.length()/10).intValue(), (pdfFile2.length()/10).intValue())
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream()
+    gmd.gmdToPdf(text, baos)
+    assertEquals((pdfFile2.length()/10).intValue(), (baos.toByteArray().length/10).intValue())
+  }
 
   @Test
   void gmdToMd() {
@@ -90,16 +120,6 @@ class GmdTest extends AbstractGmdTest {
     def gmd = new Gmd();
     def html = gmd.gmdToHtml('Today is `= theDate`', [theDate: '2023-08-14'])
     assertEquals('<p>Today is 2023-08-14</p>\n', html)
-  }
-
-  @Test
-  void gmdToPdf() {
-    def gmd = new Gmd()
-    def pdfFile = new File(testOutputDir, "gmdToPdf.pdf")
-    if (pdfFile.exists()) pdfFile.delete()
-    def html = gmd.gmdToHtmlDoc(text)
-    gmd.htmlToPdf(html, pdfFile)
-    assertTrue(pdfFile.exists())
   }
 
   @Test
