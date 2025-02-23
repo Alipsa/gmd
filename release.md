@@ -4,7 +4,6 @@
 - Add methods for direct output i.e. 
   - gmdToHtml(String gmd, File outFile, Map bindings = [:])
   - gmdToHtml(String gmd, Writer out, Map bindings = [:])
-  - gmdToPdf(String gmd, OutputStream out, Map bindings = [:])
   - gmdToPdf(String gmd, File file, Map bindings = [:]
 - 
 

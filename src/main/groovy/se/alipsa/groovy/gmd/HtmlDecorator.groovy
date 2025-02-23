@@ -75,7 +75,7 @@ class HtmlDecorator {
         }
       </style>
       """.replaceAll("@robotoUrl@", resourceUrlExternalForm("/fonts/roboto"))
-      .replaceAll("@arialuniUrl@/", resourceUrlExternalForm("/fonts/arialuni"))
+      .replaceAll("@arialuniUrl@", resourceUrlExternalForm("/fonts/arialuni"))
       .replaceAll("@courierPrimeUrl@", resourceUrlExternalForm("/fonts/courierprime"))
       .replaceAll("@unicodeUrl@", resourceUrlExternalForm("/fonts/DejaVu_Sans"))
 

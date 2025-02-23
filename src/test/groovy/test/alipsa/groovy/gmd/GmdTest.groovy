@@ -68,9 +68,9 @@ class GmdTest extends AbstractGmdTest {
     // Files might differ with a few bytes
     assertEquals((pdfFile.length()/10).intValue(), (pdfFile2.length()/10).intValue())
 
-    ByteArrayOutputStream baos = new ByteArrayOutputStream()
-    gmd.gmdToPdf(text, baos)
-    assertEquals((pdfFile2.length()/10).intValue(), (baos.toByteArray().length/10).intValue())
+    def pdfFile3 = new File(testOutputDir, "gmdToPdf3.pdf")
+    gmd.gmdToPdf(text, pdfFile3)
+    assertEquals((pdfFile2.length()/10).intValue(), (pdfFile3.length()/10).intValue())
   }
 
   @Test
@@ -423,11 +423,15 @@ out.println(chart)
   @Test
   void gmdCommandLineTest() {
     String file = getClass().getResource("/test.gmd").getFile()
-    File htmlFile = new File("gmdCommandLineTest.html")
+
+    File htmlFile = new File(testOutputDir,"gmdCommandLineTest.html")
     Gmd.main("toHtml", file, htmlFile.absolutePath)
-    File pdfFile = new File("gmdCommandLineTest.pdf")
-    Gmd.main("toHtml", file, pdfFile.absolutePath)
-    htmlFile.delete()
-    pdfFile.delete()
+    assertTrue(htmlFile.exists())
+    assertTrue(htmlFile.length() > 100, "No html content")
+
+    File pdfFile = new File(testOutputDir, "gmdCommandLineTest.pdf")
+    Gmd.main("toPdf", file, pdfFile.absolutePath)
+    assertTrue(pdfFile.exists())
+    assertTrue(pdfFile.length() > 100, "No pdf content")
   }
 }

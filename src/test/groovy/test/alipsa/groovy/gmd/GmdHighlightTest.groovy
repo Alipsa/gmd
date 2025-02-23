@@ -35,6 +35,7 @@ class GmdHighlightTest extends AbstractGmdTest {
     def pdfFile = new File(testOutputDir, "testHighlight.pdf")
     if (pdfFile.exists()) pdfFile.delete()
     gmd.processHtmlAndSaveAsPdf(html, pdfFile, false)
+    //gmd.gmdToPdf(text, pdfFile)
     Assertions.assertTrue(pdfFile.exists(), "Failed to create pdf file")
   }
 }

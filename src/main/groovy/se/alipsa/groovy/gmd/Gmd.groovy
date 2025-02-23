@@ -15,6 +15,9 @@ import javafx.concurrent.Worker
 import javafx.embed.swing.JFXPanel
 import javafx.scene.web.WebEngine
 import javafx.scene.web.WebView
+
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import org.codehaus.groovy.control.CompilationFailedException
 import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.parser.Parser
@@ -32,6 +35,7 @@ import javax.xml.transform.stream.StreamResult
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 
 import static se.alipsa.groovy.gmd.HtmlDecorator.BOOTSTRAP_CSS
@@ -41,8 +45,10 @@ import static se.alipsa.groovy.gmd.HtmlDecorator.decorate
  * Key class for this Groovy Markdown implementation
  */
 class Gmd {
+  private static final Logger LOG = LogManager.getLogger(Gmd.class)
   final Parser parser
   final HtmlRenderer renderer
+  WebView webView // We need to make the webView a member variable otherwise it is destroyed by GC
 
   static void main(String[] args) {
     new GmdCommandLine(args).run()
@@ -92,22 +98,11 @@ class Gmd {
    * The markdown is processed in a Javafx WebView to enable javascript styling.
    *
    * @param gmd Groovy Markdown text
-   * @param out the OutputStream to write to
-   * @param bindings the variables to resolve in the text (optional)
-   */
-  void gmdToPdf(String gmd, OutputStream out, Map bindings = [:]) throws GmdException {
-    processHtmlAndSaveAsPdf(gmdToHtmlDoc(gmd, bindings), out)
-  }
-
-  /**
-   * Process the Groovy Markdown text and save it to the file.
-   * The markdown is processed in a Javafx WebView to enable javascript styling.
-   *
-   * @param gmd Groovy Markdown text
    * @param file the File to write to
    * @param bindings the variables to resolve in the text (optional)
    */
   void gmdToPdf(String gmd, File file, Map bindings = [:]) throws GmdException {
+    //htmlToPdf(gmdToHtmlDoc(gmd, bindings), file)
     processHtmlAndSaveAsPdf(gmdToHtmlDoc(gmd, bindings), file)
   }
 
@@ -244,15 +239,6 @@ class Gmd {
     builder.run()
   }
 
-  void processHtmlAndSaveAsPdf(String html, File target, boolean exitOnFinish = false) throws GmdException {
-    if (target == null) {
-      throw new IllegalArgumentException("Target file cannot be null")
-    }
-    try (OutputStream os = Files.newOutputStream(target.toPath())) {
-      processHtmlAndSaveAsPdf(html, os, exitOnFinish)
-    }
-  }
-
   /**
    * Load the html into a web view so that the highlight javascript properly add classes to code parts
    * then we extract the DOM from the web view and use that to produce the PDF
@@ -261,69 +247,75 @@ class Gmd {
    * @param target the pdf output stream to write to
    * @param exitOnFinish execute Platform.exit() on completion
    */
-  void processHtmlAndSaveAsPdf(String html, OutputStream target, boolean exitOnFinish = false) throws GmdException {
+  void processHtmlAndSaveAsPdf(String html, File target, boolean exitOnFinish = false) throws GmdException {
     if (html == null) {
       throw new IllegalArgumentException("Html content cannot be null")
     }
     if (target == null) {
-      throw new IllegalArgumentException("Target output stream cannot be null")
+      throw new IllegalArgumentException("Target file cannot be null")
     }
     //noinspection GroovyResultOfObjectAllocationIgnored
     new JFXPanel() // Initiate graphics
     final CountDownLatch latchToWaitForJavaFx = new CountDownLatch(1)
     final AtomicReference<Throwable> exc = new AtomicReference<>(null)
-    WebView webview
     Platform.runLater {
-      webview = new WebView()
-      final WebEngine webEngine = webview.getEngine()
-      webEngine.setJavaScriptEnabled(true)
-      webEngine.setUserStyleSheetLocation(BOOTSTRAP_CSS)
-      webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
-        @Override
-        void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
-          if (newState == Worker.State.SUCCEEDED) {
-            try {
-              Document doc = webEngine.getDocument()
-              Transformer transformer = TransformerFactory.newInstance().newTransformer()
-              transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no")
-              transformer.setOutputProperty(OutputKeys.METHOD, "html")
-              transformer.setOutputProperty(OutputKeys.INDENT, "no")
-              transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8")
-
-              StringWriter sw = new StringWriter()
-              transformer.transform(new DOMSource(doc), new StreamResult(sw))
-              String viewContent = sw.toString()
-              // the raw DOM document will not work so we have to parse it again with jsoup to get
-              // something that the PdfRendererBuilder (used in gmd) understands
-              org.jsoup.nodes.Document doc2 = Jsoup.parse(viewContent)
-              doc2.outputSettings().syntax(org.jsoup.nodes.Document.OutputSettings.Syntax.xml)
-                  .escapeMode(Entities.EscapeMode.extended)
-                  .charset(StandardCharsets.UTF_8)
-                  .prettyPrint(false)
-              Document doc3 = new W3CDom().fromJsoup(doc2)
-              PdfRendererBuilder builder = new PdfRendererBuilder()
-                  .useSVGDrawer(new BatikSVGDrawer())
-                  .useMathMLDrawer(new MathMLDrawer())
-                  .withW3cDocument(doc3, new File(".").toURI().toString())
-                  .toStream(target)
-              builder.run()
-            } catch (Throwable t) {
-              exc.set(t)
-            } finally {
-              latchToWaitForJavaFx.countDown()
-            }
-          }
-        }
-      })
-      webEngine.loadContent(html)
+      webView = new WebView()
+      loadAndSavePdf(html, target, webView, exc, latchToWaitForJavaFx)
     }
-    latchToWaitForJavaFx.await()
-    webview = null
+    latchToWaitForJavaFx.await(15, TimeUnit.SECONDS)
     if (exitOnFinish) {
       Platform.exit()
     }
     if (exc.get() != null) {
       throw new GmdException("Failed to process html in the WebView", exc.get())
     }
+  }
+
+  void loadAndSavePdf(String html, File target, WebView webView, AtomicReference<Throwable> exc, CountDownLatch latch) {
+    final WebEngine webEngine = webView.getEngine()
+    webEngine.setJavaScriptEnabled(true)
+    webEngine.setUserStyleSheetLocation(BOOTSTRAP_CSS)
+    webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
+      @Override
+      void changed(ObservableValue ov, Worker.State oldState, Worker.State newState) {
+        LOG.info("loading html document, state is {}", newState)
+        if (newState == Worker.State.SUCCEEDED) {
+          try {
+            Document doc = webEngine.getDocument()
+            Transformer transformer = TransformerFactory.newInstance().newTransformer()
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no")
+            transformer.setOutputProperty(OutputKeys.METHOD, "html")
+            transformer.setOutputProperty(OutputKeys.INDENT, "no")
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8")
+
+            StringWriter sw = new StringWriter()
+            transformer.transform(new DOMSource(doc), new StreamResult(sw))
+            String viewContent = sw.toString()
+            // the raw DOM document will not work so we have to parse it again with jsoup to get
+            // something that the PdfRendererBuilder (used in gmd) understands
+            org.jsoup.nodes.Document doc2 = Jsoup.parse(viewContent)
+            doc2.outputSettings().syntax(org.jsoup.nodes.Document.OutputSettings.Syntax.xml)
+                .escapeMode(Entities.EscapeMode.extended)
+                .charset(StandardCharsets.UTF_8)
+                .prettyPrint(false)
+            Document doc3 = new W3CDom().fromJsoup(doc2)
+            try (FileOutputStream fos = new FileOutputStream(target)) {
+              PdfRendererBuilder builder = new PdfRendererBuilder()
+                  .useSVGDrawer(new BatikSVGDrawer())
+                  .useMathMLDrawer(new MathMLDrawer())
+                  .withW3cDocument(doc3, new File(".").toURI().toString())
+                  .toStream(fos)
+              builder.run()
+            }
+          } catch (Throwable t) {
+            LOG.warn(t)
+            exc.set(t)
+          } finally {
+            latch.countDown()
+          }
+        }
+      }
+    })
+    webEngine.loadContent(html)
   }
 }
