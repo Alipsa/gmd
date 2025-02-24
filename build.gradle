@@ -12,7 +12,7 @@ plugins {
 
 group 'se.alipsa.groovy'
 // NOTE: remember to bump version in GmdTemplateEngine when changed
-version '2.1.0-SNAPSHOT'
+version '2.1.0'
 
 repositories {
     if (version.contains('SNAPSHOT')) {
@@ -28,23 +28,12 @@ java {
 }
 
 dependencies {
-    def junitVersion = "5.11.4"
+    def junitVersion = "5.12.0"
     def openhtmltopdfVersion = "1.1.24"
     def log4jVersion = "2.24.3"
     def groovyVersion = "4.0.25"
-    def javaFxVersion = '23.0.2'
-    def matrixBomVersion = "1.1.1"
+    def matrixBomVersion = "1.1.2"
 
-    org.gradle.internal.os.OperatingSystem os = org.gradle.internal.os.OperatingSystem.current()
-    // check https://repo1.maven.org/maven2/org/openjfx/javafx/20/javafx-20.pom for the platform property
-    def qualifier = 'unknown'
-    if (os.isLinux()) {
-        qualifier='linux'
-    } else if (os.isWindows()) {
-        qualifier = 'win'
-    } else if (os.isMacOsX()) {
-        qualifier = 'mac-aarch64'
-    }
     // By using compileOnly instead of implementation, the jar will not be available at runtime
     // and hence users can use whatever compatible version of Groovy that they want
     compileOnly "org.apache.groovy:groovy:${groovyVersion}"
@@ -69,11 +58,6 @@ dependencies {
         exclude(group: "org.openjfx", module: "javafx-swing")
     }
     implementation('org.apache.pdfbox:fontbox:3.0.4')
-    // TODO: this makes the fatJar os dependent
-    //implementation "org.openjfx:javafx-base:${javaFxVersion}:${qualifier}"
-    //implementation "org.openjfx:javafx-graphics:${javaFxVersion}:${qualifier}"
-    //implementation "org.openjfx:javafx-controls:${javaFxVersion}:${qualifier}"
-    //implementation "org.openjfx:javafx-swing:${javaFxVersion}:${qualifier}"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"

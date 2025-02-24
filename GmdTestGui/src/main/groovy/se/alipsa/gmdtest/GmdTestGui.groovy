@@ -92,7 +92,7 @@ class GmdTestGui extends Application {
     }
     actionBox.getChildren().addAll(toFile, exportButton)
     primaryStage.setTitle("GmdTestGui")
-    primaryStage.setScene(new Scene(root, 600, 400))
+    primaryStage.setScene(new Scene(root, 650, 400))
     primaryStage.show()
   }
 }
