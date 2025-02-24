@@ -1,11 +1,11 @@
 # Gmd Release History
 
-### v2.1.0, In progress
+### v2.1.0, 2025-02-24
 - Add methods for direct output i.e. 
   - gmdToHtml(String gmd, File outFile, Map bindings = [:])
   - gmdToHtml(String gmd, Writer out, Map bindings = [:])
   - gmdToPdf(String gmd, File file, Map bindings = [:]
-- 
+- Add Javafx gui example
 
 ### v2.0.0, 2025-02-18
 - upgrade dependencies (require java 21, bootstrap 5.3.3, etc.)
