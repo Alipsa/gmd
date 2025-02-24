@@ -151,7 +151,7 @@ Maven:
 </build>
 ```
 ## Using Gmd from the command line
-The release artifacts on github contains a fat jar (e.g. gmd-bundled-2.0.0.jar)
+The release artifacts on github contains a fat jar (e.g. gmd-bundled-2.1.0.jar)
 that enables you to use Gmd from the command line.
 ```
 java -jar gmd-bundled-2.1.0.jar toHtml test.gmd test.html
