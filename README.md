@@ -128,11 +128,14 @@ gmd.processHtmlAndSaveAsPdf(html, pdfFile)
 Alternatives to using JavaFx WebView might be [Web-K](https://github.com/Earnix/Web-K) or [J2V8](https://github.com/eclipsesource/J2V8)
 , but I have not tested any of those.
 
+To use it from within a JavaFx application see the [GmdTestGui](https://github.com/Alipsa/gmd/tree/main/GmdTestGui/src/main/groovy/se/alipsa/gmdtest/GmdTestGui.groovy) 
+for an approach that I found to provide the best performance and usability.
+
 The library, which requires Java 21 or later, is available from maven central:
 
 Gradle: 
 ```groovy
-implementation "se.alipsa.groovy:gmd:2.0.0"
+implementation "se.alipsa.groovy:gmd:2.1.0"
 ```
 
 Maven:
@@ -142,7 +145,7 @@ Maven:
     <dependency>
       <groupId>se.alipsa.groovy</groupId>
       <artifactId>gmd</artifactId>
-      <version>2.0.0</version>
+      <version>2.1.0</version>
     </dependency>
   </dependencies>
 </build>
@@ -151,10 +154,10 @@ Maven:
 The release artifacts on github contains a fat jar (e.g. gmd-bundled-2.0.0.jar)
 that enables you to use Gmd from the command line.
 ```
-java -jar gmd-bundled-2.0.0.jar toHtml test.gmd test.html
+java -jar gmd-bundled-2.1.0.jar toHtml test.gmd test.html
 ```
 or for a pdf:
 ```
-java -jar gmd-bundled-2.0.0.jar toPdf test.gmd test.pdf
+java -jar gmd-bundled-2.1.0.jar toPdf test.gmd test.pdf
 ```
 Note: If you don't want the styled (highlight) PDF version you can use toPdfRaw instead.

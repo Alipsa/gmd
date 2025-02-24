@@ -1,0 +1,43 @@
+plugins {
+    id 'groovy'
+    id('application')
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+group = 'se.nordnet.odds'
+version = '1.0-SNAPSHOT'
+
+application {
+    mainClass = 'se.alipsa.gmdtest.GmdTestGui'
+}
+
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+javafx {
+    version = "21.0.5"
+    modules = [ 'javafx.controls', 'javafx.swing']
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.apache.groovy:groovy:4.0.25'
+    implementation('org.apache.groovy:groovy-jsr223:4.0.25')
+    implementation project(':')
+    implementation("org.openjfx:javafx-controls:23.0.2")
+    implementation("org.openjfx:javafx-swing:23.0.2")
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
