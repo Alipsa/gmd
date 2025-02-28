@@ -29,12 +29,12 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.apache.groovy:groovy:4.0.25'
-    implementation('org.apache.groovy:groovy-jsr223:4.0.25')
+    implementation 'org.apache.groovy:groovy:4.0.26'
+    implementation('org.apache.groovy:groovy-jsr223:4.0.26')
     implementation project(':')
     implementation("org.openjfx:javafx-controls:23.0.2")
     implementation("org.openjfx:javafx-swing:23.0.2")
-    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation platform('org.junit:junit-bom:5.12.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 
