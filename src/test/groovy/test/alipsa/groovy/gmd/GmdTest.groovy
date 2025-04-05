@@ -2,6 +2,7 @@ package test.alipsa.groovy.gmd
 
 import org.apache.commons.io.IOUtils
 
+import java.awt.Desktop
 import java.nio.charset.StandardCharsets
 
 import static org.junit.jupiter.api.Assertions.*
@@ -408,6 +409,46 @@ out.println(chart)
     String md = gmd.gmdToMd(text)
     assertTrue(md.contains('# Employees'))
     assertTrue(md.contains("![''](data:image/png;base64,"))
+  }
+
+  @Test
+  void testXChart() {
+    def text = '''
+# Employees
+
+```{groovy echo=false}
+import static se.alipsa.matrix.core.ListConverter.*
+
+import se.alipsa.matrix.core.*
+import se.alipsa.matrix.xchart.*
+import java.time.LocalDate 
+
+import static se.alipsa.matrix.core.ListConverter.*
+
+def empData = Matrix.builder().data(
+            emp_id: 1..5,
+            emp_name: ["Rick","Dan","Michelle","Ryan","Gary"],
+            salary: [623.3,515.2,611.0,729.0,843.25],
+            start_date: toLocalDates("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11", "2015-03-27"))
+            .types(int, String, Number, LocalDate)
+            .build()
+BarChart chart = BarChart.create(empData, 800, 600)
+        .setTitle("Salaries")
+        .addSeries("Salaries", "emp_name", "salary")
+out.println(chart)
+```
+'''
+    Gmd gmd = new Gmd()
+    String md = gmd.gmdToMd(text)
+    assertTrue(md.contains('# Employees'))
+    assertTrue(md.contains("![''](data:image/png;base64,"))
+
+    def htmlFile = new File(testOutputDir, "testXChart.html")
+    gmd.gmdToHtml(text, htmlFile)
+    assertTrue(htmlFile.exists())
+    assertTrue(htmlFile.length() > 100, "No html content")
+    assertTrue(htmlFile.text.contains('<h1>Employees</h1>'))
+    assertTrue(htmlFile.text.contains('<img src="data:image/png;base64,'), "No image content")
   }
 
   @Test

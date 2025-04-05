@@ -2,7 +2,8 @@ package se.alipsa.groovy.gmd;
 
 import se.alipsa.matrix.charts.Chart;
 import se.alipsa.matrix.charts.Plot;
-import se.alipsa.matrix.core.Matrix;
+import se.alipsa.matrix.core.Matrix
+import se.alipsa.matrix.xchart.abstractions.MatrixXChart;
 
 class Printer extends PrintWriter {
 
@@ -57,12 +58,36 @@ class Printer extends PrintWriter {
         return "!['${alt}'](${Plot.base64(x, width, height)})${attr.toString()}"
     }
 
+    private static String chartToMd(MatrixXChart x, String alt, Map<String, String> attributes) {
+        StringBuilder attr = new StringBuilder()
+        if (attributes.size() > 0) {
+            attr.append('{')
+            attributes.each {
+                attr.append(it.key).append('=').append(it.value).append(' ')
+            }
+            attr.append('}')
+        }
+        try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+            x.exportPng(os)
+            String imgContent = Base64.getEncoder().encodeToString(os.toByteArray())
+            return "!['${alt}'](data:image/png;base64,${imgContent})${attr.toString()}"
+        }
+    }
+
     void print(Chart x, double width = 800, double height = 600, String alt = '', Map<String, String> attributes = [:]) {
         print(chartToMd(x, width, height, alt, attributes))
     }
 
     void println(Chart x, double width = 800, double height = 600, String alt = '', Map<String, String> attributes = [:]) {
         println(chartToMd(x, width, height, alt, attributes))
+    }
+
+    void print(MatrixXChart x, String alt = '', Map<String, String> attributes = [:]) {
+        print(chartToMd(x, alt, attributes))
+    }
+
+    void println(MatrixXChart x, String alt = '', Map<String, String> attributes = [:]) {
+        println(chartToMd(x, alt, attributes))
     }
 
     @Override

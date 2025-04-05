@@ -1,8 +1,12 @@
 package se.alipsa.groovy.gmd
 
+import org.apache.commons.io.output.WriterOutputStream
 import se.alipsa.matrix.charts.Chart
 import se.alipsa.matrix.charts.Plot
 import se.alipsa.matrix.core.Matrix
+import se.alipsa.matrix.xchart.abstractions.MatrixXChart
+
+import java.nio.charset.StandardCharsets
 
 /**
  * This class makes i convenient to write Groovy code that creates html which is
@@ -27,18 +31,32 @@ class Html {
     return this
   }
 
+  Html add(MatrixXChart chart, String alt = '', Map<String, String> htmlattr = [:]) {
+    try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+      chart.exportPng(os)
+      String imgContent = Base64.getEncoder().encodeToString(os.toByteArray())
+      out.print("data:image/png;base64,")
+      out.println(imgToHtml(imgContent, alt, htmlattr))
+    }
+    return this
+  }
+
   String toString() {
     return out.toString()
   }
 
   private static String chartToHtml(Chart x, double width, double height, String alt, Map<String, String> attributes) {
+    imgToHtml(Plot.base64(x, width, height), alt, attributes )
+  }
+
+  private static String imgToHtml(String base64String, String alt, Map<String, String> attributes) {
     StringBuilder attr = new StringBuilder()
     if (attributes.size() > 0) {
       attributes.each {
         attr.append(it.key).append('=').append(it.value).append(' ')
       }
     }
-    return "<img alt='${alt}' src='${Plot.base64(x, width, height)}' ${attr.toString()} />"
+    return "<img alt='${alt}' src='${base64String}' ${attr.toString()} />"
   }
 
   private static String tableToHtml(Matrix table, Map<String, String> htmlattr) {

@@ -1,7 +1,8 @@
 # Gmd Release History
 
-### v2.1.1, in progress
-- upgrade gradle wrapper, junit, and groovy
+### v2.2.1, in progress
+- upgrade matrix, gradle wrapper, junit, and groovy
+- add support for matrix-xchart
 
 ### v2.1.0, 2025-02-24
 - Add methods for direct output i.e. 
