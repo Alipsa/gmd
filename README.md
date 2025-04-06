@@ -86,6 +86,37 @@ def html = gmd.gmdToHtml(text, [name: "Per"])
 gmd.htmlToPdf(html, [name: "Per"], new File("pdfFile.pdf"))
 ```
 
+GMD supports the [Matrix](https://github.com/Alipsa/matrix) library directly, i.e. Matrix, Chart and MatrixXChart 
+types can be used with the `out` PrintWriter object without needing to convert them into markdown first. 
+Here is an example:
+````
+# Employees
+    
+```{groovy echo=false}
+import static se.alipsa.matrix.core.ListConverter.*
+
+import se.alipsa.matrix.core.*
+import se.alipsa.matrix.xchart.*
+import java.time.LocalDate 
+
+import static se.alipsa.matrix.core.ListConverter.*
+
+def empData = Matrix.builder().data(
+            emp_id: 1..5,
+            emp_name: ["Rick","Dan","Michelle","Ryan","Gary"],
+            salary: [623.3,515.2,611.0,729.0,843.25],
+            start_date: toLocalDates("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11", "2015-03-27"))
+            .types(int, String, Number, LocalDate)
+            .build()
+BarChart chart = BarChart.create(empData, 800, 600)
+        .setTitle("Salaries")
+        .addSeries("Salaries", "emp_name", "salary")
+out.println(chart)
+## Emplyee details
+out.println(empData)
+```
+
+````
 For "Special" characters e.g. match symbol, you could use the html escape codes. E.g.
 to write `X = ∑(√2π + ∛3)`, you could do `X = &amp;sum;(&amp;radic;2&amp;pi; + &amp;#8731;3)` and scope the 
 expression with parenthesis as appropriate. Otherwise, it will show up as `X = ?(?2? + ?3)` when you turn it into html or pdf.
