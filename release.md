@@ -4,6 +4,7 @@
 - upgrade matrix, gradle wrapper, junit, groovy, openhtmltopdf and jsoup
 - add support for matrix-xchart
 - rethrow exceptions as GdmException when processing code blocks
+- Hide scrollbar but allow scrolling instead of just removing it
 
 ### v2.1.0, 2025-02-24
 - Add methods for direct output i.e. 

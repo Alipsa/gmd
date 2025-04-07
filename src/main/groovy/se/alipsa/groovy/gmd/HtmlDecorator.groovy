@@ -59,12 +59,20 @@ class HtmlDecorator {
           font-weight: normal;
           font-style: normal;
         }
-              
+             
+        /* Hide scrollbar but allow scrolling  */    
         body {
             font-family: 'Roboto', 'unicode', 'noto-cjk', sans-serif;
-            overflow: hidden;
+            overflow-y: scroll;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* Internet Explorer 10+ */
             word-wrap: break-word;
             font-size: 14px;
+        }
+        
+        body::-webkit-scrollbar { /* WebKit */
+          width: 0;
+          height: 0;
         }
               
         var,
