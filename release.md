@@ -1,8 +1,9 @@
 # Gmd Release History
 
-### v2.2.1, in progress
-- upgrade matrix, gradle wrapper, junit, and groovy
+### v2.2.0, in progress
+- upgrade matrix, gradle wrapper, junit, groovy, openhtmltopdf and jsoup
 - add support for matrix-xchart
+- rethrow exceptions as GdmException when processing code blocks
 
 ### v2.1.0, 2025-02-24
 - Add methods for direct output i.e. 

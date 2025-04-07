@@ -28,7 +28,7 @@ java {
 }
 
 dependencies {
-    def openhtmltopdfVersion = "1.1.24"
+    def openhtmltopdfVersion = "1.1.26"
     def log4jVersion = "2.24.3"
     def groovyVersion = "4.0.26"
     def matrixBomVersion = "2.2.0"
@@ -45,7 +45,7 @@ dependencies {
     implementation("io.github.openhtmltopdf:openhtmltopdf-pdfbox:${openhtmltopdfVersion}")
     implementation("io.github.openhtmltopdf:openhtmltopdf-mathml-support:${openhtmltopdfVersion}")
     implementation "io.github.openhtmltopdf:openhtmltopdf-svg-support:${openhtmltopdfVersion}"
-    implementation 'org.jsoup:jsoup:1.18.3'
+    implementation 'org.jsoup:jsoup:1.19.1'
     // Remember to update HtmlDecorator.BOOTSTRAP_CSS_PATH if the dependency changes
     implementation 'org.webjars:bootstrap:5.3.3'
     implementation(platform("se.alipsa.matrix:matrix-bom:$matrixBomVersion"))

@@ -32,6 +32,7 @@ dependencies {
     implementation 'org.apache.groovy:groovy:4.0.26'
     implementation('org.apache.groovy:groovy-jsr223:4.0.26')
     implementation project(':')
+    // javafx 23.x is the last version that works with JDK 21
     implementation("org.openjfx:javafx-controls:23.0.2")
     implementation("org.openjfx:javafx-swing:23.0.2")
     testImplementation(platform("org.junit:junit-bom:5.12.1"))
