@@ -131,8 +131,8 @@ The gmdToHtmlDoc() and mdToHtmlDoc() does just that. Those methods also includes
 HighlightJS requires the execution of the highligtJs init script for the code sections to be properly formatted. 
 In order for this to happen, the html code need to be rendered in a browser with javascript support. 
 
-Gmd supports processing the javascript by running it in the JavaFx WebView as follows
-Example usage:
+Gmd supports processing the javascript by running it in the JavaFx WebView as in the following 
+example usage:
 
 ```groovy
 def text = """
