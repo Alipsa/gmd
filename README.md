@@ -101,7 +101,9 @@ import java.time.LocalDate
 
 import static se.alipsa.matrix.core.ListConverter.*
 
-def empData = Matrix.builder().data(
+// if we dont do def or specify the type, the variable will be "global" and can be 
+// used in subsequent code blocks
+empData = Matrix.builder().data(
             emp_id: 1..5,
             emp_name: ["Rick","Dan","Michelle","Ryan","Gary"],
             salary: [623.3,515.2,611.0,729.0,843.25],
@@ -112,7 +114,9 @@ BarChart chart = BarChart.create(empData, 800, 600)
         .setTitle("Salaries")
         .addSeries("Salaries", "emp_name", "salary")
 out.println(chart)
-## Emplyee details
+```
+## Employee details
+```{groovy echo=false}
 out.println(empData)
 ```
 
