@@ -99,6 +99,8 @@ class GmdTemplateEngine {
             } else {
                 return text
             }
+        } catch(all) {
+            throw new GmdException("Failed to process code blocks", all)
         }
     }
 
