@@ -1,10 +1,11 @@
 # Gmd Release History
 
-### v2.2.0, in progress
+### v2.2.0, 2025-04-10
 - upgrade matrix, gradle wrapper, junit, groovy, openhtmltopdf and jsoup
 - add support for matrix-xchart
 - rethrow exceptions as GdmException when processing code blocks
 - Hide scrollbar but allow scrolling instead of just removing it
+- add an empty string to the end of the code block to not have the return value added to the result.
 
 ### v2.1.0, 2025-02-24
 - Add methods for direct output i.e. 

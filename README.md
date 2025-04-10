@@ -172,7 +172,12 @@ The library, which requires Java 21 or later, is available from maven central:
 
 Gradle: 
 ```groovy
-implementation "se.alipsa.groovy:gmd:2.1.0"
+def groovyVersion = '4.0.26' // any 4.x version should work
+implementation "se.alipsa.groovy:gmd:2.2.0"
+implementation "org.apache.groovy:groovy:${groovyVersion}"
+implementation "org.apache.groovy:groovy-templates:${groovyVersion}"
+implementation "org.apache.groovy:groovy-jsr223:${groovyVersion}"
+implementation 'org.apache.ivy:ivy:2.5.3'
 ```
 
 Maven:
@@ -182,19 +187,39 @@ Maven:
     <dependency>
       <groupId>se.alipsa.groovy</groupId>
       <artifactId>gmd</artifactId>
-      <version>2.1.0</version>
+      <version>2.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.groovy</groupId>
+      <artifactId>groovy</artifactId>
+      <version>4.0.26</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.groovy</groupId>
+      <artifactId>groovy-templates</artifactId>
+      <version>4.0.26</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.groovy</groupId>
+      <artifactId>groovy-jsr223</artifactId>
+      <version>4.0.26</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.ivy</groupId>
+      <artifactId>ivy</artifactId>
+      <version>2.5.3</version>
     </dependency>
   </dependencies>
 </build>
 ```
 ## Using Gmd from the command line
-The release artifacts on github contains a fat jar (e.g. gmd-bundled-2.1.0.jar)
+The release artifacts on github contains a fat jar (e.g. gmd-bundled-2.2.0.jar)
 that enables you to use Gmd from the command line.
 ```
-java -jar gmd-bundled-2.1.0.jar toHtml test.gmd test.html
+java -jar gmd-bundled-2.2.0.jar toHtml test.gmd test.html
 ```
 or for a pdf:
 ```
-java -jar gmd-bundled-2.1.0.jar toPdf test.gmd test.pdf
+java -jar gmd-bundled-2.2.0.jar toPdf test.gmd test.pdf
 ```
 Note: If you don't want the styled (highlight) PDF version you can use toPdfRaw instead.

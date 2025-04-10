@@ -12,7 +12,7 @@ plugins {
 
 group 'se.alipsa.groovy'
 // NOTE: remember to bump version in GmdTemplateEngine when changed
-version '2.2.0-SNAPSHOT'
+version '2.2.0' // GMD_version_mark
 
 repositories {
     if (version.contains('SNAPSHOT')) {
@@ -38,6 +38,7 @@ dependencies {
     compileOnly "org.apache.groovy:groovy:${groovyVersion}"
     compileOnly "org.apache.groovy:groovy-templates:${groovyVersion}"
     compileOnly "org.apache.groovy:groovy-jsr223:${groovyVersion}"
+    compileOnly 'org.apache.ivy:ivy:2.5.3' // needed for @Grab)
     implementation "org.apache.logging.log4j:log4j-api:${log4jVersion}"
     implementation "org.commonmark:commonmark:0.24.0"
     implementation "org.commonmark:commonmark-ext-gfm-tables:0.24.0"
@@ -69,6 +70,7 @@ dependencies {
     testImplementation "org.apache.groovy:groovy-templates:${groovyVersion}"
     testImplementation "org.apache.groovy:groovy-jsr223:${groovyVersion}"
     testImplementation 'org.apache.commons:commons-lang3:3.17.0'
+    testImplementation 'org.apache.ivy:ivy:2.5.3' // needed for @Grab)
 }
 
 test {

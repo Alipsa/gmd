@@ -72,7 +72,8 @@ class GmdTemplateEngine {
                     codeBlockCode.remove(0)
                     String codeBlock = String.join('\n', codeBlockCode)
                     //result.append("<%\n").append(codeBlock).append('\n%>\n')
-                    def tmp = engine.eval(codeBlock)
+                    // add an empty string to the end of the code block to not have the return value added to the result
+                    def tmp = engine.eval(codeBlock + '\n""')
                     def output = out.toString()
                     if (output.length() > 0) {
                         result.append(output)
@@ -135,6 +136,6 @@ class GmdTemplateEngine {
 
     @Override
     String toString() {
-        return "Groovy Markdown Processor, ver 2.2.0-SNAPSHOT"
+        return "Groovy Markdown Processor, ver 2.2.0"
     }
 }

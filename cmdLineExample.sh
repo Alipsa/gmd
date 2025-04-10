@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
-if [[ ! -f build/libs/gmd-bundled-2.1.0-SNAPSHOT.jar ]]; then
+# for convenience, parse the version number from the build.gradle file
+VERSION=$(grep GMD_version_mark < build.gradle | awk '{ print $2 }')
+VERSION="${VERSION//\'}"
+if [[ ! -f build/libs/gmd-bundled-$VERSION.jar ]]; then
   ./gradlew fatJar
 fi
-java -jar build/libs/gmd-bundled-2.1.0-SNAPSHOT.jar toPdf src/test/resources/test.gmd Test.pdf
+java -jar build/libs/gmd-bundled-$VERSION.jar toPdf src/test/resources/test.gmd build/cmdLineExample.pdf

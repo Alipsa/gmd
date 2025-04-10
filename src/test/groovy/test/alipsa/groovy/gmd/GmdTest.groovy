@@ -475,4 +475,20 @@ out.println(chart)
     assertTrue(pdfFile.exists())
     assertTrue(pdfFile.length() > 100, "No pdf content")
   }
+
+  @Test
+  void testEnsureResultDoesNotPrint() {
+    String text = """
+    ```{groovy}
+    a = 23
+    ```
+    12 + a = `= 12 + a`
+    """.stripIndent()
+    Gmd gmd = new Gmd()
+    assertEquals('''
+    ```groovy
+    a = 23
+    ```
+    12 + a = 35'''.stripIndent(), gmd.gmdToMd(text))
+  }
 }
