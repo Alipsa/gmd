@@ -27,8 +27,9 @@ class GmdTemplateEngine {
      * @return the gmd text with code blocks "expanded"
      */
     static String processCodeBlocks(String text, Map bindings = [:]) throws GmdException {
-        def classLoader = new GroovyClassLoader();
+        def classLoader = new GroovyClassLoader()
         def engine = new GroovyScriptEngineImpl(classLoader)
+        String codeBlock = ''
         try (Printer out = new Printer()) {
             engine.put("out", out)
             bindings.each {
@@ -40,7 +41,7 @@ class GmdTemplateEngine {
             boolean echo = true
             String noSpaceLine
             StringBuilder codeBlockText = new StringBuilder()
-            StringBuilder result = new StringBuilder();
+            StringBuilder result = new StringBuilder()
             List<String> lines = text.readLines()
             int count = 0
             lines.each { line ->
@@ -70,9 +71,10 @@ class GmdTemplateEngine {
                     }
 
                     codeBlockCode.remove(0)
-                    String codeBlock = String.join('\n', codeBlockCode)
+                    codeBlock = String.join('\n', codeBlockCode)
                     //result.append("<%\n").append(codeBlock).append('\n%>\n')
                     // add an empty string to the end of the code block to not have the return value added to the result
+                    //println("evaluating code block: $codeBlock")
                     def tmp = engine.eval(codeBlock + '\n""')
                     def output = out.toString()
                     if (output.length() > 0) {
@@ -101,7 +103,8 @@ class GmdTemplateEngine {
                 return text
             }
         } catch(all) {
-            throw new GmdException("Failed to process code blocks", all)
+            all.printStackTrace()
+            throw new GmdException("Failed to process code block: $codeBlock", all)
         }
     }
 
@@ -136,6 +139,6 @@ class GmdTemplateEngine {
 
     @Override
     String toString() {
-        return "Groovy Markdown Processor, ver 2.2.0"
+        return "Groovy Markdown Processor, ver 2.2.1-SNAPSHOT"
     }
 }
