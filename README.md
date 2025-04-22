@@ -64,7 +64,7 @@ Which will result in
 
 This kind of Markdown text can then be transformed to html and pdf using the Gmd class e.g:
 ```groovy
-def gmd = new se.alipsa.groovy.gmd.Gmd()
+def gmd = new se.alipsa.gmd.core.Gmd()
 // html is a string of html markup
 def html = gmd.gmdToHtml(text)
 
@@ -76,7 +76,7 @@ gmd.htmlToPdf(html, pdfFile)
 If you want to pass parameters to be used in the gmd text/file you can do that like this:
 ```groovy
 def text = 'Hello `=name`!'
-def gmd = new se.alipsa.groovy.gmd.Gmd()
+def gmd = new se.alipsa.gmd.core.Gmd()
 def md = gmd.gmdToMd(text, [name: "Per"])
 
 // Or directly to html

@@ -12,7 +12,7 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.stage.Stage
 
-import se.alipsa.groovy.gmd.*
+import se.alipsa.gmd.core.*
 
 class GmdTestGui extends Application {
 

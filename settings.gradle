@@ -1,3 +1,6 @@
-rootProject.name = 'gmd'
+rootProject.name = 'GroovyMarkdown'
 
+include 'gmd-core'
 include('GmdTestGui')
+include 'gmd-gradle-plugin'
+include 'gmd-maven-plugin'
