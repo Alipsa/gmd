@@ -116,7 +116,7 @@ task fatJar(type: Jar, dependsOn: jar) {
     manifest {
         attributes 'Main-Class': 'se.alipsa.groovy.gmd.Gmd'
     }
-    archiveBaseName = 'gmd-bundled'
+    archiveBaseName = 'gmd'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from {
         def cp = configurations.compileClasspath.collect {
