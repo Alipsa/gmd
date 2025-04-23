@@ -48,7 +48,7 @@ dependencies {
     implementation "io.github.openhtmltopdf:openhtmltopdf-svg-support:${openhtmltopdfVersion}"
     implementation 'org.jsoup:jsoup:1.19.1'
     // Remember to update HtmlDecorator.BOOTSTRAP_CSS_PATH if the dependency changes
-    implementation 'org.webjars:bootstrap:5.3.3'
+    implementation 'org.webjars:bootstrap:5.3.5'
     implementation(platform("se.alipsa.matrix:matrix-bom:$matrixBomVersion"))
     implementation 'se.alipsa.matrix:matrix-core'
     implementation('se.alipsa.matrix:matrix-charts') {
