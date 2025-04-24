@@ -39,8 +39,8 @@ dependencies {
     compileOnly "org.apache.groovy:groovy-templates:${groovyVersion}"
     compileOnly "org.apache.groovy:groovy-jsr223:${groovyVersion}"
     compileOnly 'org.apache.ivy:ivy:2.5.3' // needed for @Grab)
-    implementation "org.apache.logging.log4j:log4j-api:${log4jVersion}"
-    implementation "org.commonmark:commonmark:$commonMarkVersion"
+    api "org.apache.logging.log4j:log4j-api:${log4jVersion}"
+    api "org.commonmark:commonmark:$commonMarkVersion"
     implementation "org.commonmark:commonmark-ext-gfm-tables:$commonMarkVersion"
     implementation("io.github.openhtmltopdf:openhtmltopdf-core:${openhtmltopdfVersion}")
     implementation("io.github.openhtmltopdf:openhtmltopdf-pdfbox:${openhtmltopdfVersion}")
