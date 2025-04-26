@@ -15,4 +15,9 @@ interface GmdPluginParams {
    * - pdf
    */
   Property<String> getOutputType()
+
+  Property<String> getGroovyVersion()
+  Property<String> getLog4jVersion()
+  Property<String> getGmdVersion()
+  Property<String> getIvyVersion()
 }

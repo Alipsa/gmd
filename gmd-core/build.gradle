@@ -30,7 +30,6 @@ dependencies {
     def openhtmltopdfVersion = "1.1.26"
     def log4jVersion = "2.24.3"
     def groovyVersion = "4.0.26"
-    def matrixBomVersion = "2.2.0"
     def commonMarkVersion = "0.24.0"
 
     // By using compileOnly instead of implementation, the jar will not be available at runtime
@@ -49,15 +48,15 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.19.1'
     // Remember to update HtmlDecorator.BOOTSTRAP_CSS_PATH if the dependency changes
     implementation 'org.webjars:bootstrap:5.3.5'
-    implementation(platform("se.alipsa.matrix:matrix-bom:$matrixBomVersion"))
-    implementation 'se.alipsa.matrix:matrix-core'
-    implementation('se.alipsa.matrix:matrix-charts') {
+    // The plugin does not handle bom versions so must specify each version explicitly
+    implementation 'se.alipsa.matrix:matrix-core:3.2.0'
+    implementation('se.alipsa.matrix:matrix-charts:0.3.0') {
         exclude(group: "org.openjfx", module: "javafx-base")
         exclude(group: "org.openjfx", module: "javafx-graphics")
         exclude(group: "org.openjfx", module: "javafx-controls")
         exclude(group: "org.openjfx", module: "javafx-swing")
     }
-    implementation('se.alipsa.matrix:matrix-xchart')
+    implementation('se.alipsa.matrix:matrix-xchart:0.2.0')
     implementation 'commons-io:commons-io:2.18.0'
     implementation('org.apache.pdfbox:fontbox:3.0.4')
 
