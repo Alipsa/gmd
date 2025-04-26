@@ -1,6 +1,6 @@
 # The gmd-gradle-plugin
 
-This gradle plugin makes it possible to process a directory of GMD files and transform them into md, html of pdf files.
+This gradle plugin makes it possible to process a directory of GMD files and transform them into md, html of pdf files. For groovy library writers, this makes it easier to keep your documentation up to date since the groovy code that you use will be compiled and thus ensured to work instead of getting outdated over time as your library evolves.
 
 To use it in your gradle build script, add the following to your build.gradle file:
 
