@@ -5,7 +5,16 @@ import org.gradle.api.provider.Property
 
 @CompileStatic
 interface GmdPluginParams {
+  /**
+   * The directory where the GMD files are located. Default is src/main/gmd
+   * The path is relative to the project directory.
+   */
   Property<String> getSourceDir()
+
+  /**
+   * The directory where the generated files will be written. Default is build/gmd
+   * The path is relative to the project directory.
+   */
   Property<String> getTargetDir()
 
   /**
@@ -16,8 +25,23 @@ interface GmdPluginParams {
    */
   Property<String> getOutputType()
 
+  /**
+   * The version of Groovy to use. Default is 4.0.26
+   */
   Property<String> getGroovyVersion()
+
+  /**
+   * The version of Log4j to use. Default is 2.24.3
+   */
   Property<String> getLog4jVersion()
+
+  /**
+   * The version of GMD to use. Default is 3.0.0
+   */
   Property<String> getGmdVersion()
+
+  /**
+   * The version of Ivy to use. Default is 2.5.3
+   */
   Property<String> getIvyVersion()
 }
