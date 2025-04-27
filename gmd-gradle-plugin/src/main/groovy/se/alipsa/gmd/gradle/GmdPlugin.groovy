@@ -59,13 +59,8 @@ class GmdPlugin implements Plugin<Project> {
   }
 
   static Configuration addDependencies(Project project, List<ArtifactRepository> addedRepositories, String groovyVersion, String log4jVersion, String gmdVersion, String ivyVersion) {
-    if (!project.repositories.find { it instanceof MavenArtifactRepository && it.url.toString().startsWith('file:') }) {
-      def mavenLocal = project.repositories.mavenLocal()
-      project.repositories.add(mavenLocal)
-      addedRepositories.add(mavenLocal)
-    }
-    if (!project.repositories.find { it instanceof MavenArtifactRepository && it.url.toString().contains('repo.maven.apache.org') }) {
-      def mavenCentral = project.repositories.mavenCentral()
+    def mavenCentral = project.repositories.mavenCentral()
+    if (!hasRepository(project, mavenCentral)) {
       project.repositories.add(mavenCentral)
       addedRepositories.add(mavenCentral)
     }
@@ -77,5 +72,11 @@ class GmdPlugin implements Plugin<Project> {
         project.dependencies.create( "org.apache.logging.log4j:log4j-core:${log4jVersion}"),
         project.dependencies.create("se.alipsa.gmd:gmd-core:$gmdVersion")
     )
+  }
+
+  static boolean hasRepository(Project project, MavenArtifactRepository repo) {
+    return project.repositories.find {
+      it instanceof MavenArtifactRepository && it.url == repo.url
+    } != null
   }
 }

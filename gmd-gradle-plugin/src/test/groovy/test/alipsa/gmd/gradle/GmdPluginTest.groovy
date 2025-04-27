@@ -46,6 +46,12 @@ class GmdPluginTest {
         plugins {
             id 'se.alipsa.gmd.gmd-gradle-plugin'
         }
+        group = 'test.alipsa.gmd'
+        version = '1.0.0-SNAPSHOT'
+        repositories {
+            // Enable us to to use local snapshots
+            mavenLocal()
+        }
         gmdPlugin {
             sourceDir = 'src/test/gmd'
             targetDir = 'build/target'
