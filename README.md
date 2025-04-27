@@ -223,3 +223,39 @@ or for a pdf:
 java -jar gmd-3.0.0.jar toPdf test.gmd test.pdf
 ```
 Note: If you don't want the styled (highlight) PDF version you can use toPdfRaw instead.
+
+## Using Gmd in Gradle
+
+The gmd-gradle-plugin is a gradle plugin that allows you to use Gmd in your gradle build.
+Usage is a follows:
+```groovy
+plugins {
+  id 'se.alipsa.gmd.gmd-gradle-plugin'
+}
+gmdPlugin {
+  sourceDir = 'src/test/gmd'
+  targetDir = 'build/gmd'
+  outputType = 'md' // or 'html' or 'pdf'
+}
+```
+See the [gmd-gradle-plugin/readme](gmd-gradle-plugin/readme.md) for more details.
+
+## Using Gmd in Maven
+The gmd-maven-plugin is a maven plugin that allows you to use Gmd in your maven build.
+Usage is a follows:
+```xml
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>se.alipsa.gmd</groupId>
+        <artifactId>gmd-maven-plugin</artifactId>
+        <goals><goal>processGmd</goal></goals>
+        <configuration>
+          <sourceDir>src/test/gmd</sourceDir>
+          <targetDir>target/gmd</targetDir>
+          <outputType>html</outputType>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+```

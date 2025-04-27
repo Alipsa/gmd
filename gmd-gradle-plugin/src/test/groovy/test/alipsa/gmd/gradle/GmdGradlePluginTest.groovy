@@ -66,7 +66,7 @@ class GmdGradlePluginTest {
             mavenLocal()
         }
         plugins {
-            id 'se.alipsa.gmd.gmd-gradle-plugin' version "1.0.0-SNAPSHOT"
+            id 'se.alipsa.gmd.gmd-gradle-plugin' version "1.0.0"
         }
     }
     """.stripIndent()
