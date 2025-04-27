@@ -6,12 +6,13 @@ plugins {
     id 'java-library'
     id 'signing'
     id 'maven-publish'
+    id('io.github.gradle-nexus.publish-plugin') version '2.0.0'
     id "com.github.ben-manes.versions" version "0.52.0"
 }
 
 group = 'se.alipsa.gmd'
 // NOTE: remember to bump version in GmdTemplateEngine when changed
-version = '3.0.0-SNAPSHOT' // GMD_version_mark
+version = '3.0.0' // GMD_version_mark
 
 repositories {
     if (version.contains('SNAPSHOT')) {
@@ -27,6 +28,7 @@ java {
 }
 
 dependencies {
+    // gmd-maven-plugin does not work with version ranges or bom files
     def openhtmltopdfVersion = "1.1.26"
     def log4jVersion = "2.24.3"
     def groovyVersion = "4.0.26"
@@ -38,8 +40,8 @@ dependencies {
     compileOnly "org.apache.groovy:groovy-templates:${groovyVersion}"
     compileOnly "org.apache.groovy:groovy-jsr223:${groovyVersion}"
     compileOnly 'org.apache.ivy:ivy:2.5.3' // needed for @Grab)
-    api "org.apache.logging.log4j:log4j-api:${log4jVersion}"
-    api "org.commonmark:commonmark:$commonMarkVersion"
+    implementation "org.apache.logging.log4j:log4j-api:${log4jVersion}"
+    implementation "org.commonmark:commonmark:$commonMarkVersion"
     implementation "org.commonmark:commonmark-ext-gfm-tables:$commonMarkVersion"
     implementation("io.github.openhtmltopdf:openhtmltopdf-core:${openhtmltopdfVersion}")
     implementation("io.github.openhtmltopdf:openhtmltopdf-pdfbox:${openhtmltopdfVersion}")
@@ -48,7 +50,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.19.1'
     // Remember to update HtmlDecorator.BOOTSTRAP_CSS_PATH if the dependency changes
     implementation 'org.webjars:bootstrap:5.3.5'
-    // The plugin does not handle bom versions so must specify each version explicitly
+
     implementation 'se.alipsa.matrix:matrix-core:3.2.0'
     implementation('se.alipsa.matrix:matrix-charts:0.3.0') {
         exclude(group: "org.openjfx", module: "javafx-base")
@@ -113,9 +115,9 @@ test {
 
 task fatJar(type: Jar, dependsOn: jar) {
     manifest {
-        attributes 'Main-Class': 'se.alipsa.groovy.gmd.Gmd'
+        attributes 'Main-Class': 'se.alipsa.gmd.core.Gmd'
     }
-    archiveBaseName = 'gmd'
+    archiveBaseName = 'gmd-bundled'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from {
         def cp = configurations.compileClasspath.collect {

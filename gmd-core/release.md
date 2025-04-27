@@ -4,7 +4,8 @@
 - change group name to se.alipsa.gmd
 - change artifact name to gmd-core
 - improve error output
-- moved into gmd subproject
+- moved into gmd-core subdir
+- Explicitly set matrix versions as the gradle plugin cannot handle the bom
 
 ### v2.2.0, 2025-04-10
 - upgrade matrix, gradle wrapper, junit, groovy, openhtmltopdf and jsoup

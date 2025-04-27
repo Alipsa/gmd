@@ -4,7 +4,7 @@ import groovy.transform.CompileStatic
 import org.gradle.api.provider.Property
 
 @CompileStatic
-interface GmdPluginParams {
+interface GmdGradlePluginParams {
   /**
    * The directory where the GMD files are located. Default is src/main/gmd
    * The path is relative to the project directory.

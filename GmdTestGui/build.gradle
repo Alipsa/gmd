@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'se.alipsa.gmd'
-version = '1.0-SNAPSHOT'
+version = '1.0.0'
 
 application {
     mainClass = 'se.alipsa.gmdtest.GmdTestGui'
@@ -31,7 +31,7 @@ repositories {
 dependencies {
     implementation 'org.apache.groovy:groovy:4.0.26'
     implementation('org.apache.groovy:groovy-jsr223:4.0.26')
-    implementation project(':gmd-core')
+    implementation 'se.alipsa.gmd:gmd-core:3.0.0'
     // javafx 23.x is the last version that works with JDK 21
     implementation("org.openjfx:javafx-controls:23.0.2")
     implementation("org.openjfx:javafx-swing:23.0.2")

@@ -11,18 +11,18 @@ import org.gradle.process.ExecOperations
 import javax.inject.Inject
 
 @CompileStatic
-class GmdPlugin implements Plugin<Project> {
+class GmdGradlePlugin implements Plugin<Project> {
 
   ExecOperations execOperations
 
   @Inject
-  GmdPlugin(ExecOperations execOperations) {
+  GmdGradlePlugin(ExecOperations execOperations) {
     this.execOperations = execOperations
   }
 
   @Override
   void apply(Project project) {
-    def extension = project.extensions.create('gmdPlugin', GmdPluginParams)
+    def extension = project.extensions.create('gmdPlugin', GmdGradlePluginParams)
     project.tasks.register('processGmd') {
       it.doLast {
         def sourceDir= project.file(extension.sourceDir.getOrElse("src/main/gmd"))
@@ -30,7 +30,7 @@ class GmdPlugin implements Plugin<Project> {
         def outputType= extension.outputType.getOrElse('md')
         def groovyVersion = extension.groovyVersion.getOrElse('4.0.26')
         def log4jVersion = extension.log4jVersion.getOrElse('2.24.3')
-        def gmdVersion = extension.gmdVersion.getOrElse('3.0.0-SNAPSHOT')
+        def gmdVersion = extension.gmdVersion.getOrElse('3.0.0')
         def ivyVersion = extension.ivyVersion.getOrElse('2.5.3')
 
         project.logger.info("Processing GMD in ${sourceDir} -> ${targetDir}, type: ${outputType}")

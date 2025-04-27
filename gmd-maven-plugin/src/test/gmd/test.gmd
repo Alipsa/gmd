@@ -1,0 +1,5 @@
+# Greetings
+
+```{groovy echo=false}
+out.println "Hello world!"
+```
