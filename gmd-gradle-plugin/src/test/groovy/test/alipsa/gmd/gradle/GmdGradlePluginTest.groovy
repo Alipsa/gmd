@@ -1,6 +1,7 @@
 package test.alipsa.gmd.gradle
 
 import groovy.ant.AntBuilder
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.gradle.testkit.runner.GradleRunner
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
@@ -11,14 +12,17 @@ class GmdGradlePluginTest {
   void testPlugin() {
     File targetDir = null
     try {
-      File testProjectDir = File.createTempDir("gmdPluginTest")
+      File testProjectDir = new File("build/gmdPluginTest")
+      if (!testProjectDir.exists()) {
+        testProjectDir.mkdirs()
+      }
       File srcDir = new File(testProjectDir, 'src/test/gmd')
       srcDir.mkdirs()
       targetDir = new File(testProjectDir, 'build/target')
       targetDir.mkdirs()
 
       def gmdFile = new File(srcDir, 'test.gmd')
-      gmdFile << """
+      gmdFile.text = """
       # Greetings
   
       ```{groovy echo=false}
@@ -27,7 +31,7 @@ class GmdGradlePluginTest {
       """.stripIndent()
 
       def gmdFile2 = new File(srcDir, 'inline.gmd')
-      gmdFile2 << """
+      gmdFile2.text = """
       # Inline
       
       ```{groovy}
@@ -42,7 +46,7 @@ class GmdGradlePluginTest {
       """.stripIndent()
 
       def buildFile = new File(testProjectDir, 'build.gradle')
-      buildFile << """
+      buildFile.text = """
         plugins {
             id 'se.alipsa.gmd.gmd-gradle-plugin'
         }
@@ -60,7 +64,7 @@ class GmdGradlePluginTest {
         """.stripIndent()
       // settings can be removed, only for manual testing
       def settingsFile = new File(testProjectDir, 'settings.gradle')
-      settingsFile << """
+      settingsFile.text = """
     pluginManagement {
         repositories {
             mavenLocal()
@@ -78,7 +82,10 @@ class GmdGradlePluginTest {
           .forwardOutput()
           .build()
       assert result.task(":processGmd").outcome == SUCCESS
-      assert result.output.contains("Gmd files processed and written to $testProjectDir/build/target".toString())
+
+      // the directory differs on a mac even though they point to the same place so cannot include
+      def expected = "Gmd files processed and written to $targetDir.canonicalPath".toString()
+      Assertions.assertTrue(result.output.contains(expected), "expected \n$expected, but output was ${result.output}")
 
       def testHtml = new File(targetDir, 'test.html')
       assert testHtml.exists()
