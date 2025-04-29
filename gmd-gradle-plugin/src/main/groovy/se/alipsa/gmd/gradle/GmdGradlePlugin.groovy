@@ -3,9 +3,11 @@ package se.alipsa.gmd.gradle
 import groovy.transform.CompileStatic
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.repositories.ArtifactRepository
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
+import org.gradle.api.tasks.TaskProvider
 import org.gradle.process.ExecOperations
 
 import javax.inject.Inject
@@ -23,7 +25,7 @@ class GmdGradlePlugin implements Plugin<Project> {
   @Override
   void apply(Project project) {
     def extension = project.extensions.create('gmdPlugin', GmdGradlePluginParams)
-    project.tasks.register('processGmd') {
+    TaskProvider<Task> processGmdTask = project.tasks.register('processGmd') {
       it.doLast {
         def sourceDir= project.file(extension.sourceDir.getOrElse("src/main/gmd"))
         def targetDir= project.file(extension.targetDir.getOrElse("build/gmd"))
@@ -40,7 +42,7 @@ class GmdGradlePlugin implements Plugin<Project> {
             groovyVersion, log4jVersion, gmdVersion, ivyVersion
         )
         // a configuration is a FileCollection, no need to call resolve()
-        execOperations.javaexec( a -> {
+        def result = execOperations.javaexec( a -> {
           a.classpath = configuration
           a.mainClass.set('se.alipsa.gmd.core.GmdProcessor')
           a.args = [
@@ -53,7 +55,18 @@ class GmdGradlePlugin implements Plugin<Project> {
         addedRepositories.each { repo ->
           project.repositories.remove(repo)
         }
+        result.assertNormalExitValue()
         project.logger.quiet("Gmd files processed and written to ${targetDir.canonicalPath}")
+      }
+    }
+    project.afterEvaluate {
+      try {
+        TaskProvider<Task> buildTask = it.tasks.named('build')
+        buildTask.configure { Task task ->
+          task.dependsOn(processGmdTask)
+        }
+      } catch (Exception e) {
+        project.logger.warn("Could not add dependency to build task: ${e.message}")
       }
     }
   }

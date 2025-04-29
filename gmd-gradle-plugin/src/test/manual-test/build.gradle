@@ -1,0 +1,13 @@
+plugins {
+  id 'se.alipsa.gmd.gmd-gradle-plugin'
+  id 'groovy'
+}
+group = 'test.alipsa.gmd'
+version = '1.0.0-SNAPSHOT'
+repositories {
+  // Enable us to to use local snapshots
+  mavenLocal()
+}
+gmdPlugin {
+  outputType = 'html'
+}

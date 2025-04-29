@@ -62,18 +62,18 @@ class GmdGradlePluginTest {
             outputType = 'html'
         }
         """.stripIndent()
-      // settings can be removed, only for manual testing
+
       def settingsFile = new File(testProjectDir, 'settings.gradle')
       settingsFile.text = """
-    pluginManagement {
-        repositories {
-            mavenLocal()
-        }
-        plugins {
-            id 'se.alipsa.gmd.gmd-gradle-plugin' version "1.0.0"
-        }
-    }
-    """.stripIndent()
+      pluginManagement {
+          repositories {
+              mavenLocal()
+          }
+          plugins {
+              id 'se.alipsa.gmd.gmd-gradle-plugin' version "1.0.0"
+          }
+      }
+      """.stripIndent()
 
       def result = GradleRunner.create()
           .withProjectDir(testProjectDir)
