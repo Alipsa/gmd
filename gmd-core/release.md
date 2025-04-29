@@ -1,6 +1,6 @@
 # Gmd Release History
 
-### v3.0.0, in progress
+### v3.0.0, 2025-04-28
 - change group name to se.alipsa.gmd
 - change artifact name to gmd-core
 - improve error output

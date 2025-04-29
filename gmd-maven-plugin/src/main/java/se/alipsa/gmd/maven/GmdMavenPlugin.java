@@ -9,12 +9,12 @@ import se.alipsa.gmd.core.GmdProcessor;
 /**
  * Maven plugin to process GMD files.
  */
-@Mojo(name = "processGmd", defaultPhase = LifecyclePhase.COMPILE)
+@Mojo(name = "processGmd", defaultPhase = LifecyclePhase.PROCESS_RESOURCES)
 public class GmdMavenPlugin extends AbstractMojo {
 
   @Parameter(name="sourceDir", property = "processGmd.sourceDir", defaultValue = "src/main/gmd")
   private String sourceDir;
-  @Parameter(name = "targetDir", property = "processGmd.targetDir", defaultValue = "build/gmd" )
+  @Parameter(name = "targetDir", property = "processGmd.targetDir", defaultValue = "target/gmd" )
   private String targetDir;
   @Parameter(name = "outputType", property = "processGmd.outputType", defaultValue = "md" )
   private String outputType;
