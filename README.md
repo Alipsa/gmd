@@ -259,3 +259,4 @@ Usage is a follows:
     </plugins>
   </build>
 ```
+See the [gmd-maven-plugin/readme](gmd-maven-plugin/readme.md) for more details.
