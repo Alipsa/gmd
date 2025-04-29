@@ -1,3 +1,5 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/se.alipsa.gmd/gmd-gradle-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/se.alipsa.gmd/gmd-gradle-plugin)
+[![javadoc](https://javadoc.io/badge2/se.alipsa.gmd/gmd-gradle-plugin/javadoc.svg)](https://javadoc.io/doc/se.alipsa.gmd/gmd-gradle-plugin)
 # The gmd-gradle-plugin
 
 This gradle plugin makes it possible to process a directory of GMD files and transform them into md, html of pdf files. For groovy library writers, this makes it easier to keep your documentation up to date since the groovy code that you use will be compiled and thus ensured to work instead of getting outdated over time as your library evolves.

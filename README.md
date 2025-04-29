@@ -1,5 +1,5 @@
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/se.alipsa.groovy/gmd-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/se.alipsa.groovy/gmd-core)
-[![javadoc](https://javadoc.io/badge2/se.alipsa.groovy/gmd-core/javadoc.svg)](https://javadoc.io/doc/se.alipsa.groovy/gmd-core)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/se.alipsa.gmd/gmd-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/se.alipsa.gmd/gmd-core)
+[![javadoc](https://javadoc.io/badge2/se.alipsa.gmd/gmd-core/javadoc.svg)](https://javadoc.io/doc/se.alipsa.groovy/gmd-core)
 # gmd - Groovy Markdown
 
 Groovy markdown is basically markdown with some groovy code for dynamic rendering.

@@ -1,5 +1,5 @@
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/se.alipsa.groovy/gmd-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/se.alipsa.groovy/gmd-maven-plugin)
-[![javadoc](https://javadoc.io/badge2/se.alipsa.groovy/gmd-maven-plugin/javadoc.svg)](https://javadoc.io/doc/se.alipsa.groovy/gmd-maven-plugin)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/se.alipsa.gmd/gmd-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/se.alipsa.gmd/gmd-maven-plugin)
+[![javadoc](https://javadoc.io/badge2/se.alipsa.gmd/gmd-maven-plugin/javadoc.svg)](https://javadoc.io/doc/se.alipsa.gmd/gmd-maven-plugin)
 ## Using Gmd in Maven
 The gmd-maven-plugin is a maven plugin that allows you to use Gmd in your maven build.
 Usage is as follows:
