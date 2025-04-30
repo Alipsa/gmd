@@ -25,6 +25,7 @@ class GmdGradlePlugin implements Plugin<Project> {
   @Override
   void apply(Project project) {
     def extension = project.extensions.create('gmdPlugin', GmdGradlePluginParams)
+
     TaskProvider<Task> processGmdTask = project.tasks.register('processGmd') {
       it.doLast {
         def sourceDir= project.file(extension.sourceDir.getOrElse("src/main/gmd"))
@@ -35,6 +36,13 @@ class GmdGradlePlugin implements Plugin<Project> {
         def gmdVersion = extension.gmdVersion.getOrElse('3.0.0')
         def ivyVersion = extension.ivyVersion.getOrElse('2.5.3')
 
+        if (!sourceDir.exists()) {
+          project.logger.warn("Source directory ${sourceDir.canonicalPath} does not exist, nothing to do")
+          return
+        }
+        if (!targetDir.exists()) {
+          targetDir.mkdirs()
+        }
         project.logger.info("Processing GMD in ${sourceDir} -> ${targetDir}, type: ${outputType}")
 
         List<ArtifactRepository> addedRepositories = []
@@ -56,17 +64,26 @@ class GmdGradlePlugin implements Plugin<Project> {
           project.repositories.remove(repo)
         }
         result.assertNormalExitValue()
-        project.logger.quiet("Gmd files processed and written to ${targetDir.canonicalPath}")
+        if (sourceDir.listFiles().size() > 0) {
+          if (targetDir.exists()) {
+            project.logger.quiet("Gmd files processed and written to ${targetDir.canonicalPath}")
+          } else {
+            project.logger.warn("${targetDir.canonicalPath} should exists but does not, something is probably wrong")
+          }
+        } else {
+          project.logger.quiet("No gmd files found in ${sourceDir.canonicalPath}, nothing to do")
+        }
       }
     }
     project.afterEvaluate {
       try {
-        TaskProvider<Task> buildTask = it.tasks.named('build')
+        def runTaskBefore = extension.runTaskBefore.getOrElse('test')
+        TaskProvider<Task> buildTask = it.tasks.named(runTaskBefore)
         buildTask.configure { Task task ->
           task.dependsOn(processGmdTask)
         }
       } catch (Exception e) {
-        project.logger.warn("Could not add dependency to build task: ${e.message}")
+        project.logger.warn("Could not add processGmd task before the test task: ${e.message}")
       }
     }
   }

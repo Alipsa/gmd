@@ -44,4 +44,10 @@ interface GmdGradlePluginParams {
    * The version of Ivy to use. Default is 2.5.3
    */
   Property<String> getIvyVersion()
+
+  /**
+   * The task that the gmd plugin should run before. Default is 'test'
+   * @return
+   */
+  Property<String> getRunTaskBefore()
 }

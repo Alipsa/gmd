@@ -24,9 +24,38 @@ Possible parameters are:
 - `gmdVersion` - the version of GMD to use. Default is `3.0.0`
 - `log4jVersion` - the version of log4j to use. Default is `2.24.3`
 - `ivyVersion` - the version of ivy to use. Default is `2.5.3`
+- `runTaskBefore` - the task that the gmd plugin should run before. Default is 'test'
 
 The target task is called `processGmd` so it can be invoked from the command line as follows:
 
 ```bash
 ./gradlew processGmd
+```
+The default task to run after processGmd is `test`. If you dont have pliugins that define that task such as 
+`java`, `groovy` etc. you can do something like the following to set processGmd to run before `build`
+
+```groovy
+plugins {
+    id('base') // add build and assemble tasks
+    id('se.alipsa.gmd.gmd-gradle-plugin')
+}
+group = 'my.group'
+version = '1.0.0-SNAPSHOT'
+
+gmdPlugin {
+    sourceDir = 'src/test/gmd'
+    targetDir = 'build/target'
+    outputType = 'pdf'
+    runTaskBefore = 'build' // we dont have the test target so specify the task to not get a warning 
+}
+```
+Now if you do `./gradlew build`, the processGmd task will run before build:
+```
+> Task :processGmd
+
+Gmd files processed and written to /Users/myuser/myproject/build/target
+
+
+BUILD SUCCESSFUL
+ in 3s
 ```

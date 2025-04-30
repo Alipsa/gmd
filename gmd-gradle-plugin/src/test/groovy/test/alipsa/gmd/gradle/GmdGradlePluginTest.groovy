@@ -48,6 +48,7 @@ class GmdGradlePluginTest {
       def buildFile = new File(testProjectDir, 'build.gradle')
       buildFile.text = """
         plugins {
+            id('base') // add build and assemble tasks
             id 'se.alipsa.gmd.gmd-gradle-plugin'
         }
         group = 'test.alipsa.gmd'
@@ -60,6 +61,7 @@ class GmdGradlePluginTest {
             sourceDir = 'src/test/gmd'
             targetDir = 'build/target'
             outputType = 'html'
+            runTaskBefore = 'build' // we dont have tests so specify the task to not get a warning 
         }
         """.stripIndent()
 
