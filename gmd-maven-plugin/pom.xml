@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>se.alipsa.gmd</groupId>
   <artifactId>gmd-maven-plugin</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
   <name>GmdMavenPlugin</name>
   <description>Compile gmd files into markdown, html or pdf</description>
