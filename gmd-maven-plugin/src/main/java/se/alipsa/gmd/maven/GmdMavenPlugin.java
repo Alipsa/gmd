@@ -29,7 +29,9 @@ public class GmdMavenPlugin extends AbstractMojo {
   }
 
   /**
-   * The directory where the GMD files are located. Default is src/main/gmd
+   * The directory where the GMD files are located. Default is src/main/gmd.
+   *
+   * @return The directory where the GMD files are located.
    */
   public String getSourceDir() {
     return sourceDir;
@@ -37,6 +39,8 @@ public class GmdMavenPlugin extends AbstractMojo {
 
   /**
    * The directory where the generated files will be written. Default is target/gmd
+   *
+   * @return The directory where the generated files will be written.
    */
   public String getTargetDir() {
     return targetDir;
@@ -47,6 +51,8 @@ public class GmdMavenPlugin extends AbstractMojo {
    * - md
    * - html
    * - pdf
+   *
+   * @return The type of output to generate.
    */
   public String getOutputType() {
     return outputType;
